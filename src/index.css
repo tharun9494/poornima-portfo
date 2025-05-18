@@ -1,0 +1,128 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-primary: 175, 82, 222;   /* Lavender */
+    --color-secondary: 23, 162, 184; /* Teal */
+    --color-accent: 243, 182, 170;   /* Rose Gold */
+    --color-success: 40, 167, 69;    /* Green */
+    --color-warning: 255, 193, 7;    /* Yellow */
+    --color-error: 220, 53, 69;      /* Red */
+    --color-text: 51, 51, 51;        /* Dark Gray */
+  }
+}
+
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+  
+  body {
+    @apply font-sans text-base text-gray-800 bg-white;
+    line-height: 1.5;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-medium leading-tight;
+  }
+  
+  h1 {
+    @apply text-4xl md:text-5xl lg:text-6xl;
+  }
+  
+  h2 {
+    @apply text-3xl md:text-4xl;
+  }
+  
+  h3 {
+    @apply text-2xl md:text-3xl;
+  }
+  
+  h4 {
+    @apply text-xl md:text-2xl;
+  }
+  
+  h5 {
+    @apply text-lg md:text-xl;
+  }
+  
+  h6 {
+    @apply text-base md:text-lg;
+  }
+  
+  a {
+    @apply text-primary-600 hover:text-primary-700 transition-colors;
+  }
+  
+  button, .btn {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-md font-medium transition-all duration-300;
+  }
+  
+  .btn-primary {
+    @apply bg-primary-600 text-white hover:bg-primary-700 focus:ring-4 focus:ring-primary-300;
+  }
+  
+  .btn-secondary {
+    @apply bg-secondary-600 text-white hover:bg-secondary-700 focus:ring-4 focus:ring-secondary-300;
+  }
+  
+  .btn-accent {
+    @apply bg-accent-400 text-white hover:bg-accent-500 focus:ring-4 focus:ring-accent-200;
+  }
+  
+  .btn-outline {
+    @apply border-2 border-primary-500 text-primary-500 bg-transparent hover:bg-primary-500 hover:text-white;
+  }
+  
+  .section {
+    @apply py-16 md:py-24;
+  }
+  
+  .container {
+    @apply px-4 mx-auto max-w-7xl;
+  }
+  
+  /* 3D Canvas */
+  .canvas-container {
+    @apply absolute inset-0 z-0;
+  }
+  
+  /* Animations */
+  .fade-in {
+    @apply animate-fade-in;
+  }
+  
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  .animate-fade-in {
+    animation: fade-in 1s ease-out;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-white text-gray-900;
+}
+
+section {
+  @apply min-h-screen py-20;
+}
+
+/* Add padding to account for fixed header */
+main {
+  @apply pt-16;
+}
+
+/* Optional: Add a scroll progress indicator */
+.scroll-progress {
+  @apply fixed top-0 left-0 h-1 bg-primary-600 transition-all duration-300;
+  z-index: 1000;
+}
