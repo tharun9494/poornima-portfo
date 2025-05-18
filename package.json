@@ -13,7 +13,7 @@
     "@react-three/drei": "^9.99.4",
     "@react-three/fiber": "^8.15.16",
     "firebase": "^10.14.1",
-    "framer-motion": "^11.0.3",
+    "framer-motion": "^11.18.2",
     "lucide-react": "^0.344.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
