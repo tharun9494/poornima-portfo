@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import Layout from './components/layout/Layout';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute';
+import ReviewSection from './components/ReviewSection';
 
 // Pages
 import Home from './pages/Home';

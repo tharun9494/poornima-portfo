@@ -71,7 +71,7 @@ const Header: React.FC = () => {
         label: 'Admin Dashboard', 
         isButton: true,
         onClick: handleAdminClick,
-        className: 'bg-green-600 hover:bg-green-700 flex items-center gap-2',
+        className: 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 flex items-center gap-2',
         icon: (
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -85,29 +85,38 @@ const Header: React.FC = () => {
       label: currentUser ? 'Sign Out' : 'Login', 
       isButton: true,
       onClick: currentUser ? handleSignOut : handleLoginClick,
-      className: currentUser ? 'bg-red-600 hover:bg-red-700' : 'bg-primary-600 hover:bg-primary-700'
+      className: currentUser 
+        ? 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700' 
+        : 'bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700'
     }
   ];
 
   return (
     <>
-      <header className={`fixed w-full z-50 transition-all duration-300 ${
-        isScrolled 
-          ? 'bg-white/95 backdrop-blur-md shadow-md py-2' 
-          : 'bg-transparent py-4'
-      }`}>
-        <nav className="container mx-auto px-4">
+      <motion.header 
+        className={`fixed w-full z-50 transition-all duration-300 py-4 ${
+          isScrolled 
+            ? 'bg-white/95 backdrop-blur-md shadow-lg' 
+            : 'bg-transparent'
+        }`}
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <nav className="container mx-auto px-6">
           <div className="flex justify-between items-center">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="text-2xl font-bold bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent"
+              whileHover={{ scale: 1.05 }}
+              className="text-2xl font-bold bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent cursor-pointer"
+              onClick={() => scrollToSection('home')}
             >
               Your Logo
             </motion.div>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-6">
+            <div className="hidden md:flex items-center space-x-8">
               {navItems.map((item) => (
                 <div key={item.id} className="relative group">
                   {item.subItems ? (
@@ -119,7 +128,9 @@ const Header: React.FC = () => {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         className={`text-sm font-medium transition-colors ${
-                          isScrolled ? 'text-gray-800 hover:text-primary-600' : 'text-white hover:text-primary-200'
+                          isScrolled 
+                            ? 'text-gray-800 hover:text-primary-600' 
+                            : 'text-gray-800 hover:text-primary-600'
                         }`}
                       >
                         {item.label}
@@ -128,17 +139,18 @@ const Header: React.FC = () => {
                       <AnimatePresence>
                         {activeDropdown === item.id && (
                           <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 10 }}
-                            className="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2"
+                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                            transition={{ duration: 0.2 }}
+                            className="absolute left-0 mt-2 w-48 bg-white/95 backdrop-blur-md rounded-lg shadow-xl py-2 border border-gray-100"
                           >
                             {item.subItems.map((subItem) => (
                               <motion.button
                                 key={subItem.id}
-                                whileHover={{ x: 5 }}
+                                whileHover={{ x: 5, backgroundColor: 'rgba(175, 82, 222, 0.1)' }}
                                 onClick={() => scrollToSection(subItem.id)}
-                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-600"
+                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:text-primary-600 transition-colors"
                               >
                                 {subItem.label}
                               </motion.button>
@@ -152,12 +164,12 @@ const Header: React.FC = () => {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={item.onClick || (() => scrollToSection(item.id))}
-                      className={`text-sm font-medium transition-colors ${
+                      className={`text-sm font-medium transition-all duration-300 ${
                         item.isButton 
-                          ? `${item.className || 'bg-primary-600'} text-white px-4 py-2 rounded-full flex items-center`
+                          ? `${item.className} text-white px-6 py-2.5 rounded-full flex items-center gap-2 shadow-lg hover:shadow-xl`
                           : isScrolled 
                             ? 'text-gray-800 hover:text-primary-600' 
-                            : 'text-white hover:text-primary-200'
+                            : 'text-gray-800 hover:text-primary-600'
                       }`}
                     >
                       {item.icon}
@@ -169,9 +181,11 @@ const Header: React.FC = () => {
             </div>
 
             {/* Mobile Menu Button */}
-            <button
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden text-gray-600 hover:text-gray-900"
+              className="md:hidden text-gray-600 hover:text-gray-900 focus:outline-none"
               aria-label="Toggle menu"
             >
               <svg
@@ -189,7 +203,7 @@ const Header: React.FC = () => {
                   <path d="M4 6h16M4 12h16M4 18h16" />
                 )}
               </svg>
-            </button>
+            </motion.button>
           </div>
 
           {/* Mobile Menu */}
@@ -199,45 +213,56 @@ const Header: React.FC = () => {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
-                className="md:hidden mt-4 bg-white rounded-lg shadow-lg overflow-hidden"
+                transition={{ duration: 0.3 }}
+                className="md:hidden mt-4 bg-white/95 backdrop-blur-md rounded-xl shadow-xl overflow-hidden border border-gray-100"
               >
-                <div className="px-4 py-2 space-y-2">
+                <div className="px-4 py-3 space-y-2">
                   {navItems.map((item) => (
                     <div key={item.id}>
                       {item.subItems ? (
                         <div>
-                          <button
+                          <motion.button
+                            whileHover={{ x: 5 }}
                             onClick={() => setActiveDropdown(activeDropdown === item.id ? null : item.id)}
-                            className="w-full text-left px-4 py-2 text-sm font-medium text-gray-700 hover:bg-primary-50 hover:text-primary-600"
+                            className="w-full text-left px-4 py-3 text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
                           >
                             {item.label}
-                          </button>
-                          {activeDropdown === item.id && (
-                            <div className="pl-4 space-y-1">
-                              {item.subItems.map((subItem) => (
-                                <button
-                                  key={subItem.id}
-                                  onClick={() => scrollToSection(subItem.id)}
-                                  className="block w-full text-left px-4 py-2 text-sm text-gray-600 hover:bg-primary-50 hover:text-primary-600"
-                                >
-                                  {subItem.label}
-                                </button>
-                              ))}
-                            </div>
-                          )}
+                          </motion.button>
+                          <AnimatePresence>
+                            {activeDropdown === item.id && (
+                              <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                className="pl-4 space-y-1"
+                              >
+                                {item.subItems.map((subItem) => (
+                                  <motion.button
+                                    key={subItem.id}
+                                    whileHover={{ x: 5 }}
+                                    onClick={() => scrollToSection(subItem.id)}
+                                    className="block w-full text-left px-4 py-2 text-sm text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
+                                  >
+                                    {subItem.label}
+                                  </motion.button>
+                                ))}
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
                         </div>
                       ) : (
-                        <button
+                        <motion.button
+                          whileHover={{ x: 5 }}
                           onClick={item.onClick || (() => scrollToSection(item.id))}
-                          className={`w-full text-left px-4 py-2 text-sm font-medium ${
+                          className={`w-full text-left px-4 py-3 text-sm font-medium rounded-lg transition-all ${
                             item.isButton
-                              ? `${item.className || 'bg-primary-600'} text-white rounded-full flex items-center gap-2`
-                              : 'text-gray-700 hover:bg-primary-50 hover:text-primary-600'
+                              ? `${item.className} text-white flex items-center gap-2 shadow-lg hover:shadow-xl`
+                              : 'text-gray-700 hover:text-primary-600 hover:bg-primary-50'
                           }`}
                         >
                           {item.icon}
                           {item.label}
-                        </button>
+                        </motion.button>
                       )}
                     </div>
                   ))}
@@ -246,7 +271,7 @@ const Header: React.FC = () => {
             )}
           </AnimatePresence>
         </nav>
-      </header>
+      </motion.header>
 
       <LoginModal
         isOpen={isLoginModalOpen}

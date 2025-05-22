@@ -1,18 +1,48 @@
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import AnimatedSpheres from '../components/3d/AnimatedSpheres';
+import poornima from './images/poornima.png'
 
 export default function Home() {
+  const { scrollYProgress } = useScroll();
+  const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.8]);
+
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
-    }
+    } 
   };
 
   return (
     <>
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-800 to-secondary-800 text-white">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-28">
+        {/* Animated Background */}
+        <motion.div 
+          className="absolute inset-0 bg-gradient-to-br from-primary-800 via-primary-900 to-secondary-900"
+          style={{ opacity, scale }}
+        >
+          <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
+          <motion.div
+            className="absolute inset-0"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-primary-600/20 to-secondary-600/20 animate-gradient-x"></div>
+          </motion.div>
+        </motion.div>
+
+        {/* 3D Spheres */}
+        <motion.div 
+          className="absolute inset-0 z-0"
+          style={{ opacity, scale }}
+        >
+          <AnimatedSpheres />
+        </motion.div>
+
+        {/* Content */}
         <div className="container mx-auto px-4 z-10">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
             <motion.div 
@@ -21,52 +51,102 @@ export default function Home() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 1 }}
             >
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white">
+              <motion.h1 
+                className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.8 }}
+              >
                 Transform Your <span className="text-yellow-400 font-extrabold">Digital Success</span>
-              </h1>
-              <p className="text-lg md:text-xl mb-8 text-blue-100 font-medium">
+              </motion.h1>
+              <motion.p 
+                className="text-lg md:text-xl mb-8 text-blue-100 font-medium"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.8 }}
+              >
                 Expert mentorship and training for students and women entrepreneurs. Learn to build your personal brand, gain online visibility, and achieve your professional goals.
-              </p>
-              
-              <div className="flex flex-wrap gap-4">
-                <button onClick={() => scrollToSection('circle')} className="btn bg-yellow-400 hover:bg-yellow-300 text-gray-900 font-bold px-6 py-3 rounded-lg shadow-lg transition-all duration-300">
-                  Join Women's Circle
-                </button>
-                <a href="https://wa.me/1234567890" target="_blank" rel="noopener noreferrer" className="btn bg-white hover:bg-blue-50 text-primary-600 font-bold px-6 py-3 rounded-lg shadow-lg border-2 border-white transition-all duration-300">
-                  Join WhatsApp Community
-                </a>
-                <button onClick={() => scrollToSection('webinars')} className="btn bg-blue-400 hover:bg-blue-300 text-white font-bold px-6 py-3 rounded-lg shadow-lg transition-all duration-300">
-                  Register for Webinars
-                </button>
-              </div>
+              </motion.p>
+              <motion.div
+                className="flex flex-wrap gap-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6, duration: 0.8 }}
+              >
+                <motion.button
+                  whileHover={{ scale: 1.05, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => scrollToSection('what-i-do')}
+                  className="px-8 py-3 bg-primary-600 text-white rounded-full font-medium shadow-lg hover:shadow-xl transition-all duration-300"
+                >
+                  Explore Services
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => scrollToSection('contact')}
+                  className="px-8 py-3 bg-white/10 backdrop-blur-sm text-white rounded-full font-medium border border-white/20 hover:bg-white/20 transition-all duration-300"
+                >
+                  Get in Touch
+                </motion.button>
+              </motion.div>
             </motion.div>
-            
-            <motion.div 
+
+            <motion.div
               className="lg:w-1/2"
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1, delay: 0.2 }}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.4, duration: 0.8 }}
             >
-              <div className="relative w-full h-96 rounded-xl overflow-hidden shadow-2xl">
-                <img 
-                  src="https://images.pexels.com/photos/3184405/pexels-photo-3184405.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" 
-                  alt="Empowerment Workshop" 
-                  className="w-full h-full object-cover"
+              <div className="relative">
+                <motion.div 
+                  className="absolute inset-0 bg-gradient-to-r from-primary-600/20 to-secondary-600/20 rounded-2xl blur-2xl"
+                  animate={{ 
+                    scale: [1, 1.1, 1],
+                    opacity: [0.5, 0.8, 0.5]
+                  }}
+                  transition={{ 
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                />
+                <motion.img
+                  src={poornima}
+                  alt="Hero"
+                  className="relative rounded-2xl shadow-2xl"
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ duration: 0.3 }}
                 />
               </div>
             </motion.div>
           </div>
         </div>
-        
-        {/* Scroll indicator */}
-        <motion.div 
+
+        {/* Scroll Indicator */}
+        <motion.div
           className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-          animate={{ y: [0, 10, 0] }}
-          transition={{ repeat: Infinity, duration: 1.5 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1, duration: 0.8 }}
         >
-          <div className="w-8 h-12 border-2 border-white rounded-full flex justify-center items-start p-1">
-            <div className="w-1 h-3 bg-white rounded-full animate-bounce"></div>
-          </div>
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+            className="text-white/60"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+            </svg>
+          </motion.div>
         </motion.div>
       </section>
       
