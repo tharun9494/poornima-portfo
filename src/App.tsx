@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import Layout from './components/layout/Layout';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute';
 import ReviewSection from './components/ReviewSection';
 
@@ -16,10 +16,11 @@ import Testimonials from './pages/Testimonials';
 import Contact from './pages/Contact';
 import AdminDashboard from './pages/AdminDashboard';
 import Login from './pages/Login';
+import Events from './pages/Events';
 
 function App() {
   return (
-    <Router>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route
@@ -47,7 +48,10 @@ function App() {
                 <section id="circle" className="min-h-screen py-20 bg-gray-50">
                   <Circle />
                 </section>
-                <section id="webinars" className="min-h-screen py-20">
+                <section id="events" className="min-h-screen py-20">
+                  <Events />
+                </section>
+                <section id="webinars" className="min-h-screen py-20 bg-gray-50">
                   <Webinars />
                 </section>
                 <section id="community" className="min-h-screen py-20 bg-gray-50">
@@ -67,7 +71,7 @@ function App() {
           }
         />
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 }
 

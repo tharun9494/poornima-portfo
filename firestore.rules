@@ -1,0 +1,62 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Rules for webinars collection
+    match /webinars/{document=**} {
+      allow read: if true;  // Allow public read access
+      allow write: if isAuthenticated();  // Only authenticated users can write
+    }
+
+    // Rules for events collection
+    match /events/{document=**} {
+      allow read: if true;  // Allow public read access
+      allow write: if isAuthenticated();  // Only authenticated users can write
+    }
+
+    // Rules for galleryImages collection
+    match /galleryImages/{document=**} {
+      allow read: if true;  // Allow public read access
+      allow write: if isAuthenticated();  // Only authenticated users can write
+    }
+
+    // Rules for testimonials collection
+    match /testimonials/{document=**} {
+      allow read: if true;  // Allow public read access
+      allow write: if isAuthenticated();  // Only authenticated users can write
+    }
+
+    // Rules for communityLinks collection
+    match /communityLinks/{document=**} {
+      allow read: if true;  // Allow public read access
+      allow write: if isAuthenticated();  // Only authenticated users can write
+    }
+
+    // Rules for contactMessages collection
+    match /contactMessages/{document=**} {
+      allow read, write: if isAuthenticated();
+    }
+
+    // Rules for notifications collection
+    match /notifications/{document=**} {
+      allow read, write: if isAuthenticated();
+    }
+
+    // Rules for eventImages collection
+    match /eventImages/{document=**} {
+      allow read: if true;  // Allow public read access
+      allow write: if isAuthenticated();  // Only authenticated users can write
+    }
+
+    // Rules for reviews collection
+    match /reviews/{document=**} {
+      allow read: if true;  // Allow public read access
+      allow write: if true;  // Allow anyone to submit reviews
+      allow update, delete: if isAuthenticated();  // Only authenticated users can modify/delete
+    }
+  }
+} 

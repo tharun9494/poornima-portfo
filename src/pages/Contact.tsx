@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
+import { auth } from '../firebase/config';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -15,11 +16,47 @@ export default function Contact() {
   const [reviewForm, setReviewForm] = useState({ name: '', role: '', rating: 0, review: '' });
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
   const [reviewSuccess, setReviewSuccess] = useState(false);
+  // Add new state for form submission
+  const [submitting, setSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log(formData);
+    setSubmitting(true);
+    setError('');
+
+    try {
+      // Check if user is authenticated
+      const user = auth.currentUser;
+      
+      // Add the form data to Firestore
+      await addDoc(collection(db, 'contactMessages'), {
+        ...formData,
+        status: 'new',
+        createdAt: new Date(),
+        userId: user?.uid || 'anonymous' // Add user ID if available
+      });
+      
+      // Reset form and show success message
+      setFormData({
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
+      });
+      setSubmitSuccess(true);
+      
+      // Hide success message after 3 seconds
+      setTimeout(() => {
+        setSubmitSuccess(false);
+      }, 3000);
+    } catch (error: any) {
+      console.error('Error submitting form:', error);
+      setError(error.message || 'Failed to send message. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -153,7 +190,7 @@ export default function Contact() {
               </div>
               <button
                 type="submit"
-                className="w-full bg-primary-600 text-white py-2 md:py-3 px-4 md:px-6 rounded-lg font-medium hover:bg-primary-700 transition-colors duration-300 text-sm md:text-base"
+                className="w-full bg-primary-600 text-white py-2 md:py-3 px-4 md:px-6 rounded-lg font-medium hover:bg-primary-700 transition-colors duration-300"
                 disabled={reviewSubmitting}
               >
                 {reviewSubmitting ? 'Submitting...' : 'Submit Review'}
@@ -250,6 +287,7 @@ export default function Contact() {
                       onChange={handleChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm md:text-base"
                       required
+                      disabled={submitting}
                     />
                   </div>
                   <div>
@@ -264,6 +302,7 @@ export default function Contact() {
                       onChange={handleChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm md:text-base"
                       required
+                      disabled={submitting}
                     />
                   </div>
                   <div>
@@ -278,6 +317,7 @@ export default function Contact() {
                       onChange={handleChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm md:text-base"
                       required
+                      disabled={submitting}
                     />
                   </div>
                   <div>
@@ -292,16 +332,28 @@ export default function Contact() {
                       rows={4}
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm md:text-base"
                       required
+                      disabled={submitting}
                     />
                   </div>
                   <motion.button
                     type="submit"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full bg-primary-600 text-white py-2 md:py-3 px-4 md:px-6 rounded-lg font-medium hover:bg-primary-700 transition-colors duration-300 text-sm md:text-base"
+                    whileHover={{ scale: submitting ? 1 : 1.02 }}
+                    whileTap={{ scale: submitting ? 1 : 0.98 }}
+                    className={`w-full bg-primary-600 text-white py-2 md:py-3 px-4 md:px-6 rounded-lg font-medium transition-colors duration-300 text-sm md:text-base ${
+                      submitting ? 'opacity-75 cursor-not-allowed' : 'hover:bg-primary-700'
+                    }`}
+                    disabled={submitting}
                   >
-                    Send Message
+                    {submitting ? 'Sending...' : 'Send Message'}
                   </motion.button>
+                  {submitSuccess && (
+                    <div className="text-green-600 text-center font-medium mt-2">
+                      Thank you for your message! We'll get back to you soon.
+                    </div>
+                  )}
+                  {error && (
+                    <div className="text-red-600 text-center font-medium mt-2">{error}</div>
+                  )}
                 </div>
               </form>
             </motion.div>

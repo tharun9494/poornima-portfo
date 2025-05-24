@@ -1,11 +1,60 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import AnimatedSpheres from '../components/3d/AnimatedSpheres';
 import poornima from './images/poornima.png'
+import { useState, useEffect } from 'react';
+import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
+import { db } from '../firebase/config';
+
+interface Webinar {
+  id: string;
+  title: string;
+  date: string;
+  time: string;
+  duration: string;
+  learningOutcomes: string;
+  formLink: string;
+  imageUrl: string;
+  description: string;
+}
 
 export default function Home() {
   const { scrollYProgress } = useScroll();
   const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.8]);
+  const [nextWebinar, setNextWebinar] = useState<Webinar | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchNextWebinar = async () => {
+      try {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const q = query(
+          collection(db, 'webinars'),
+          orderBy('date', 'asc'),
+          limit(1)
+        );
+        const snapshot = await getDocs(q);
+        if (!snapshot.empty) {
+          const webinar = { id: snapshot.docs[0].id, ...snapshot.docs[0].data() } as Webinar;
+          const webinarDate = new Date(webinar.date);
+          webinarDate.setHours(0, 0, 0, 0);
+          
+          // Only set the webinar if it's in the future
+          if (webinarDate >= today) {
+            setNextWebinar(webinar);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching next webinar:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNextWebinar();
+  }, []);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -232,13 +281,13 @@ export default function Home() {
               
               <div className="flex items-center">
                 <img 
-                  src="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" 
-                  alt="Sarah Johnson" 
+                  src="https://media.licdn.com/dms/image/v2/D5622AQFaO2OK7ELiLg/feedshare-shrink_1280/feedshare-shrink_1280/0/1723695862368?e=1750896000&v=beta&t=4hzEPUUMZHwJC3o576LE7qGNa9rJhEydECdrqSySBHA" 
+                  alt="Poornima S" 
                   className="w-12 h-12 rounded-full object-cover mr-4"
                 />
                 <div>
-                  <h4 className="font-semibold">Sarah Johnson</h4>
-                  <p className="text-sm text-gray-500">Entrepreneur & Program Participant</p>
+                  <h4 className="font-semibold">Poornima S</h4>
+                  <p className="text-sm text-gray-500">QueenfluenceHub</p>
                 </div>
               </div>
             </div>
@@ -253,32 +302,73 @@ export default function Home() {
       </section>
       
       {/* Upcoming Webinar Preview */}
-      <section className="py-20 bg-gradient-to-r from-secondary-600 to-primary-600 text-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">Expert-Led Webinars</h2>
-            <p className="max-w-3xl mx-auto text-blue-100 font-medium">
-              Join our interactive sessions led by industry experts to master essential skills and connect with like-minded professionals.
-            </p>
+      {!loading && !nextWebinar ? null : (
+        <section className="py-20 bg-gradient-to-r from-secondary-600 to-primary-600 text-white">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">Expert-Led Webinars</h2>
+              <p className="max-w-3xl mx-auto text-blue-100 font-medium">
+                Join our interactive sessions led by industry experts to master essential skills and connect with like-minded professionals.
+              </p>
+            </div>
+            
+            {loading ? (
+              <div className="flex justify-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
+              </div>
+            ) : nextWebinar ? (
+              <div className="bg-white/10 backdrop-blur-md rounded-lg p-8 max-w-2xl mx-auto">
+                <div className="mb-4 text-yellow-300 font-bold">NEXT WEBINAR</div>
+                <h3 className="text-2xl font-bold mb-2 text-white">{nextWebinar.title}</h3>
+                <p className="mb-4 text-blue-100">
+                  Date: {new Date(nextWebinar.date).toLocaleDateString()} • {nextWebinar.time} • Duration: {nextWebinar.duration}
+                </p>
+                <p className="mb-6 text-blue-100">
+                  {nextWebinar.learningOutcomes}
+                </p>
+                {nextWebinar.formLink && (
+                  <a
+                    href={nextWebinar.formLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn bg-white text-primary-600 hover:bg-gray-100"
+                  >
+                    Register Now
+                  </a>
+                )}
+              </div>
+            ) : (
+              <div className="bg-white/10 backdrop-blur-md rounded-lg p-8 max-w-2xl mx-auto text-center">
+                <div className="mb-6">
+                  <svg 
+                    className="w-16 h-16 mx-auto text-yellow-300 mb-4" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round" 
+                      strokeWidth="2" 
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                  </svg>
+                  <h3 className="text-xl font-semibold text-white mb-2">Stay Tuned!</h3>
+                  <p className="text-blue-100">
+                    We're currently planning our next exciting webinar. Check back soon for updates!
+                  </p>
+                </div>
+                <button 
+                  onClick={() => scrollToSection('webinars')} 
+                  className="btn bg-white text-primary-600 hover:bg-gray-100"
+                >
+                  View Past Webinars
+                </button>
+              </div>
+            )}
           </div>
-          
-          <div className="bg-white/10 backdrop-blur-md rounded-lg p-8 max-w-2xl mx-auto">
-            <div className="mb-4 text-yellow-300 font-bold">NEXT WEBINAR</div>
-            <h3 className="text-2xl font-bold mb-2 text-white">Master Your Personal Brand: A Step-by-Step Guide</h3>
-            <p className="mb-4 text-blue-100">Date: June 15, 2025 • 2:00 PM EST • Duration: 90 minutes</p>
-            <p className="mb-6">
-              In this hands-on webinar, you'll learn:
-              • How to create a compelling personal brand story
-              • Strategies to increase your online visibility
-              • Tools to attract your ideal clients or employers
-              • Action plan for immediate implementation
-            </p>
-            <button onClick={() => scrollToSection('webinars')} className="btn bg-white text-primary-600 hover:bg-gray-100">
-              Register Now
-            </button>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
       
       {/* Call to Action */}
       <section className="py-20 bg-white">

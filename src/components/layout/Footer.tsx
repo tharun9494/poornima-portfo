@@ -42,6 +42,7 @@ export default function Footer() {
               <li><button onClick={() => scrollToSection('about')} className="text-gray-300 hover:text-primary-500 transition duration-300">About Me</button></li>
               <li><button onClick={() => scrollToSection('what-i-do')} className="text-gray-300 hover:text-primary-500 transition duration-300">What I Do</button></li>
               <li><button onClick={() => scrollToSection('circle')} className="text-gray-300 hover:text-primary-500 transition duration-300">Women's Circle</button></li>
+              <li><button onClick={() => scrollToSection('events')} className="text-gray-300 hover:text-primary-500 transition duration-300">Events</button></li>
               <li><button onClick={() => scrollToSection('webinars')} className="text-gray-300 hover:text-primary-500 transition duration-300">Webinars</button></li>
             </ul>
           </div>
