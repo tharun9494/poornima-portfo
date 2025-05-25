@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc, query, orderBy, Timestamp, writeBatch } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { db, storage } from '../firebase/config';
-import { FileText, Image, MessageSquare, Users, X, Plus, Edit2, Trash2, Save, XCircle, Calendar, Check, Star } from 'lucide-react';
+import { FileText, Image, MessageSquare, Users, X, Plus, Edit2, Trash2, Save, XCircle, Calendar, Check, Linkedin, Youtube, Instagram, Twitter, Facebook, Globe } from 'lucide-react';
 
 interface DashboardStats {
   webinars: number;
@@ -54,6 +54,8 @@ interface CommunityLink {
   id: string;
   platform: string;
   url: string;
+  createdAt: any;
+  updatedAt: any;
 }
 
 // Add new interface for Gallery Image
@@ -85,17 +87,15 @@ interface ContactMessage {
   status: 'new' | 'read' | 'replied';
 }
 
-interface Review {
-  id: string;
-  name: string;
-  email: string;
-  rating: number;
-  title: string;
-  content: string;
-  programType: string;
-  status: 'pending' | 'approved' | 'rejected';
-  createdAt: any;
-}
+const PLATFORM_OPTIONS = [
+  { value: 'linkedin', label: 'LinkedIn', icon: Linkedin, color: 'text-blue-600' },
+  { value: 'youtube', label: 'YouTube', icon: Youtube, color: 'text-red-600' },
+  { value: 'instagram', label: 'Instagram', icon: Instagram, color: 'text-pink-600' },
+  { value: 'twitter', label: 'Twitter', icon: Twitter, color: 'text-blue-400' },
+  { value: 'facebook', label: 'Facebook', icon: Facebook, color: 'text-blue-700' },
+  { value: 'whatsapp', label: 'WhatsApp', icon: MessageSquare, color: 'text-green-600' },
+  { value: 'other', label: 'Other', icon: Globe, color: 'text-gray-600' }
+];
 
 const AdminDashboard: React.FC = () => {
   const [stats, setStats] = useState<DashboardStats>({
@@ -176,9 +176,6 @@ const AdminDashboard: React.FC = () => {
   });
   const [editingEvent, setEditingEvent] = useState<string | null>(null);
 
-  // Add new state for reviews
-  const [reviews, setReviews] = useState<Review[]>([]);
-
   useEffect(() => {
     fetchStats();
     fetchWebinars();
@@ -187,7 +184,6 @@ const AdminDashboard: React.FC = () => {
     fetchCommunityLinks();
     fetchGalleryImages();
     fetchMessages();
-    fetchReviews();
   }, []);
 
   const fetchStats = async () => {
@@ -287,20 +283,6 @@ const AdminDashboard: React.FC = () => {
       setMessages(messageList);
     } catch (error) {
       console.error('Error fetching messages:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchReviews = async () => {
-    try {
-      setLoading(true);
-      const q = query(collection(db, 'reviews'), orderBy('createdAt', 'desc'));
-      const snapshot = await getDocs(q);
-      const reviewList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Review));
-      setReviews(reviewList);
-    } catch (error) {
-      console.error('Error fetching reviews:', error);
     } finally {
       setLoading(false);
     }
@@ -426,7 +408,8 @@ const AdminDashboard: React.FC = () => {
     try {
       await addDoc(collection(db, 'communityLinks'), {
         ...newCommunityLink,
-        createdAt: Timestamp.now()
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now()
       });
       setNewCommunityLink({ platform: '', url: '' });
       fetchCommunityLinks();
@@ -676,21 +659,6 @@ const AdminDashboard: React.FC = () => {
       } finally {
         setLoading(false);
       }
-    }
-  };
-
-  const handleReviewStatus = async (reviewId: string, status: 'approved' | 'rejected') => {
-    try {
-      setLoading(true);
-      await updateDoc(doc(db, 'reviews', reviewId), {
-        status,
-        updatedAt: Timestamp.now()
-      });
-      await fetchReviews();
-    } catch (error) {
-      console.error('Error updating review status:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -1581,124 +1549,92 @@ const AdminDashboard: React.FC = () => {
   );
 
   // Update the community section in the return statement
-  const renderCommunity = () => (
+  const renderCommunityLinks = () => (
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-gray-800">Manage Community</h2>
+        <h2 className="text-xl font-semibold text-gray-800">Manage Community Links</h2>
         <button onClick={() => setActiveSection('dashboard')} className="text-gray-600 hover:text-gray-800">
           <X size={24} />
         </button>
       </div>
-      <form onSubmit={handleAddCommunityLink} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Platform</label>
-          <input
-            type="text"
-            value={newCommunityLink.platform}
-            onChange={(e) => setNewCommunityLink({ ...newCommunityLink, platform: e.target.value })}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-            placeholder="e.g., Facebook, Instagram, LinkedIn"
-            required
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">URL</label>
-          <input
-            type="url"
-            value={newCommunityLink.url}
-            onChange={(e) => setNewCommunityLink({ ...newCommunityLink, url: e.target.value })}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-            placeholder="https://..."
-            required
-          />
-        </div>
-        <button type="submit" className="w-full bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors">
-          Add Community Link
-        </button>
-      </form>
-      <div className="border-t pt-4 mt-4">
-        <h3 className="font-medium text-gray-700 mb-2">Current Links</h3>
-        {communityLinks.length > 0 ? (
-          <div className="space-y-2">
-            {communityLinks.map((link) => (
-              <div key={link.id} className="flex justify-between items-center p-2 bg-gray-50 rounded">
-                {editingCommunityLink === link.id ? (
-                  <form onSubmit={(e) => {
-                    e.preventDefault();
-                    handleUpdateCommunityLink(link.id, link);
-                  }} className="flex-grow space-y-2">
-                    <input
-                      type="text"
-                      value={link.platform}
-                      onChange={(e) => {
-                        const updatedLinks = communityLinks.map(l =>
-                          l.id === link.id ? { ...l, platform: e.target.value } : l
-                        );
-                        setCommunityLinks(updatedLinks);
-                      }}
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-                      placeholder="Platform"
-                      required
-                    />
-                    <input
-                      type="url"
-                      value={link.url}
-                      onChange={(e) => {
-                        const updatedLinks = communityLinks.map(l =>
-                          l.id === link.id ? { ...l, url: e.target.value } : l
-                        );
-                        setCommunityLinks(updatedLinks);
-                      }}
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
-                      placeholder="URL"
-                      required
-                    />
-                    <div className="flex justify-end space-x-2">
-                      <button
-                        type="button"
-                        onClick={() => setEditingCommunityLink(null)}
-                        className="px-3 py-1 text-gray-600 hover:text-gray-800"
-                      >
-                        <XCircle size={20} />
-                      </button>
-                      <button
-                        type="submit"
-                        className="px-3 py-1 text-green-600 hover:text-green-800"
-                      >
-                        <Save size={20} />
-                      </button>
-                    </div>
-                  </form>
-                ) : (
-                  <>
-                    <div>
-                      <p className="font-medium">{link.platform}</p>
-                      <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-500 hover:underline">
-                        {link.url}
-                      </a>
-                    </div>
-                    <div className="flex space-x-2">
-                      <button
-                        onClick={() => setEditingCommunityLink(link.id)}
-                        className="text-green-600 hover:text-green-800"
-                      >
-                        <Edit2 size={20} />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteCommunityLink(link.id)}
-                        className="text-red-600 hover:text-red-800"
-                      >
-                        <Trash2 size={20} />
-                      </button>
-                    </div>
-                  </>
-                )}
-              </div>
-            ))}
+
+      <form onSubmit={handleAddCommunityLink} className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Platform</label>
+            <select
+              value={newCommunityLink.platform}
+              onChange={(e) => setNewCommunityLink({ ...newCommunityLink, platform: e.target.value })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              required
+            >
+              <option value="">Select Platform</option>
+              {PLATFORM_OPTIONS.map((platform) => (
+                <option key={platform.value} value={platform.value}>
+                  {platform.label}
+                </option>
+              ))}
+            </select>
           </div>
-        ) : (
-          <p className="text-gray-500">No links found</p>
-        )}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">URL</label>
+            <input
+              type="url"
+              value={newCommunityLink.url}
+              onChange={(e) => setNewCommunityLink({ ...newCommunityLink, url: e.target.value })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              placeholder="https://..."
+              required
+            />
+          </div>
+        </div>
+
+        <div className="flex justify-end">
+          <button
+            type="submit"
+            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add Link
+          </button>
+        </div>
+      </form>
+
+      <div className="mt-8">
+        <h3 className="text-lg font-medium text-gray-900 mb-4">Current Links</h3>
+        <div className="space-y-4">
+          {communityLinks.map((link) => (
+            <div key={link.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+              <div className="flex items-center space-x-4">
+                {PLATFORM_OPTIONS.find(p => p.value === link.platform)?.icon && (
+                  <div className={`p-2 rounded-full bg-white shadow-sm ${PLATFORM_OPTIONS.find(p => p.value === link.platform)?.color}`}>
+                    {React.createElement(PLATFORM_OPTIONS.find(p => p.value === link.platform)?.icon || Globe, { size: 20 })}
+                  </div>
+                )}
+                <div>
+                  <p className="font-medium text-gray-900">
+                    {PLATFORM_OPTIONS.find(p => p.value === link.platform)?.label || 'Other'}
+                  </p>
+                  <p className="text-sm text-gray-500 truncate max-w-xs">{link.url}</p>
+                </div>
+              </div>
+              <div className="flex space-x-2">
+                <button
+                  onClick={() => setEditingCommunityLink(link.id)}
+                  className="text-blue-600 hover:text-blue-800"
+                >
+                  <Edit2 size={20} />
+                </button>
+                <button
+                  onClick={() => handleDeleteCommunityLink(link.id)}
+                  className="text-red-600 hover:text-red-800"
+                >
+                  <Trash2 size={20} />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -2104,81 +2040,6 @@ const AdminDashboard: React.FC = () => {
     </div>
   );
 
-  const renderReviews = () => (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-gray-800">Manage Reviews</h2>
-        <button onClick={() => setActiveSection('dashboard')} className="text-gray-600 hover:text-gray-800">
-          <X size={24} />
-        </button>
-      </div>
-
-      <div className="space-y-4">
-        {loading ? (
-          <div className="text-center py-4">Loading...</div>
-        ) : reviews.length > 0 ? (
-          reviews.map((review) => (
-            <div key={review.id} className="border rounded-lg p-4 space-y-3">
-              <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="font-medium text-gray-900">{review.title}</h3>
-                  <p className="text-sm text-gray-500">
-                    By {review.name} ({review.email})
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Program: {review.programType.charAt(0).toUpperCase() + review.programType.slice(1)}
-                  </p>
-                  <div className="flex items-center mt-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-4 h-4 ${
-                          i < review.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
-                        }`}
-                      />
-                    ))}
-                  </div>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span className={`px-2 py-1 rounded text-sm ${
-                    review.status === 'pending'
-                      ? 'bg-yellow-100 text-yellow-800'
-                      : review.status === 'approved'
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-red-100 text-red-800'
-                  }`}>
-                    {review.status.charAt(0).toUpperCase() + review.status.slice(1)}
-                  </span>
-                </div>
-              </div>
-
-              <p className="text-gray-700">{review.content}</p>
-
-              {review.status === 'pending' && (
-                <div className="flex justify-end space-x-2">
-                  <button
-                    onClick={() => handleReviewStatus(review.id, 'approved')}
-                    className="px-3 py-1 text-green-600 hover:text-green-800"
-                  >
-                    <Check size={20} />
-                  </button>
-                  <button
-                    onClick={() => handleReviewStatus(review.id, 'rejected')}
-                    className="px-3 py-1 text-red-600 hover:text-red-800"
-                  >
-                    <X size={20} />
-                  </button>
-                </div>
-              )}
-            </div>
-          ))
-        ) : (
-          <p className="text-gray-500 text-center py-4">No reviews found</p>
-        )}
-      </div>
-    </div>
-  );
-
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="max-w-7xl mx-auto">
@@ -2293,49 +2154,20 @@ const AdminDashboard: React.FC = () => {
               </div>
             </div>
           </div>
+        </div>
 
-          {/* Reviews Card */}
-          <div 
-            className={`bg-white rounded-lg shadow-md p-4 cursor-pointer transition-all duration-300 hover:shadow-lg ${
-              activeSection === 'reviews' ? 'ring-2 ring-purple-500' : ''
-            }`}
-            onClick={() => setActiveSection(activeSection === 'reviews' ? 'dashboard' : 'reviews')}
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-lg font-semibold text-gray-800">Reviews</h2>
-                <p className="text-2xl font-bold text-purple-600 mt-1">{reviews.length}</p>
-              </div>
-              <div className="bg-purple-100 p-2 rounded-full">
-                <Star className="w-5 h-5 text-purple-600" />
-              </div>
-            </div>
+        {/* Active Section Content */}
+        {activeSection === 'dashboard' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Add your dashboard widgets here */}
           </div>
-        </div>
-
-        {/* Management Sections */}
-        <div className="space-y-6">
-          {/* Events Management */}
-          {activeSection === 'events' && renderEvents()}
-
-          {/* Webinars Management */}
-          {activeSection === 'webinars' && renderWebinars()}
-
-          {/* Gallery Management */}
-          {activeSection === 'gallery' && renderGallery()}
-
-          {/* Testimonials Management */}
-          {activeSection === 'testimonials' && renderTestimonials()}
-
-          {/* Community Management */}
-          {activeSection === 'community' && renderCommunity()}
-
-          {/* Messages Management */}
-          {activeSection === 'messages' && renderMessages()}
-
-          {/* Reviews Management */}
-          {activeSection === 'reviews' && renderReviews()}
-        </div>
+        )}
+        {activeSection === 'webinars' && renderWebinars()}
+        {activeSection === 'events' && renderEvents()}
+        {activeSection === 'gallery' && renderGallery()}
+        {activeSection === 'testimonials' && renderTestimonials()}
+        {activeSection === 'community' && renderCommunityLinks()}
+        {activeSection === 'messages' && renderMessages()}
       </div>
     </div>
   );

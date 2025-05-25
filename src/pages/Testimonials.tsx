@@ -146,26 +146,7 @@ export default function Testimonials() {
               </motion.div>
             ))}
           </motion.div>
-
-          {/* Call to Action */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="text-center mt-16"
-          >
-            <h2 className="text-2xl md:text-3xl font-bold text-primary-800 mb-6">
-              Ready to Start Your Success Story?
-            </h2>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-primary-600 text-white px-8 py-3 rounded-full font-medium hover:bg-primary-700 transition-colors duration-300"
-            >
-              Join Our Community
-            </motion.button>
-          </motion.div>
+        
         </motion.div>
       </div>
     </div>

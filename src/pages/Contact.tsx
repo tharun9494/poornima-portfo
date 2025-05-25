@@ -1,8 +1,24 @@
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, orderBy } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { auth } from '../firebase/config';
+import { Linkedin, Youtube, Instagram, Twitter, Facebook, MessageSquare } from 'lucide-react';
+
+interface CommunityLink {
+  id: string;
+  platform: string;
+  url: string;
+}
+
+const PLATFORM_OPTIONS = [
+  { value: 'linkedin', label: 'LinkedIn', icon: Linkedin, color: 'text-blue-600', bgColor: 'bg-blue-50' },
+  { value: 'youtube', label: 'YouTube', icon: Youtube, color: 'text-red-600', bgColor: 'bg-red-50' },
+  { value: 'instagram', label: 'Instagram', icon: Instagram, color: 'text-pink-600', bgColor: 'bg-pink-50' },
+  { value: 'twitter', label: 'Twitter', icon: Twitter, color: 'text-blue-400', bgColor: 'bg-blue-50' },
+  { value: 'facebook', label: 'Facebook', icon: Facebook, color: 'text-blue-700', bgColor: 'bg-blue-50' },
+  { value: 'whatsapp', label: 'WhatsApp', icon: MessageSquare, color: 'text-green-600', bgColor: 'bg-green-50' }
+];
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -20,6 +36,7 @@ export default function Contact() {
   const [submitting, setSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [error, setError] = useState('');
+  const [communityLinks, setCommunityLinks] = useState<CommunityLink[]>([]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,8 +105,23 @@ export default function Contact() {
     setReviewSubmitting(false);
   };
 
+  useEffect(() => {
+    const fetchCommunityLinks = async () => {
+      const linksQuery = query(collection(db, 'communityLinks'), orderBy('createdAt', 'desc'));
+      const linksSnapshot = await getDocs(linksQuery);
+      const linksData: CommunityLink[] = linksSnapshot.docs.map(doc => ({
+        id: doc.id,
+        platform: doc.data().platform,
+        url: doc.data().url
+      }));
+      setCommunityLinks(linksData);
+    };
+
+    fetchCommunityLinks();
+  }, []);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-50 py-10 md:py-20">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-50 py-6 sm:py-10 md:py-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -97,12 +129,12 @@ export default function Contact() {
           transition={{ duration: 0.8 }}
           className="max-w-4xl mx-auto w-full"
         >
-          <div className="text-center mb-12">
+          <div className="text-center mb-8 sm:mb-12">
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.8 }}
-              className="text-4xl md:text-5xl font-bold text-primary-800 mb-4"
+              className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary-800 mb-3 sm:mb-4"
             >
               Get in Touch
             </motion.h1>
@@ -110,16 +142,16 @@ export default function Contact() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.8 }}
-              className="text-lg text-gray-600 max-w-2xl mx-auto"
+              className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-4"
             >
               Have questions about our programs or want to learn more? We'd love to hear from you.
             </motion.p>
           </div>
 
           {/* Review Button */}
-          <div className="text-center mb-8">
+          <div className="text-center mb-6 sm:mb-8">
             <button
-              className="bg-primary-600 text-white px-6 py-2 rounded-full font-medium hover:bg-primary-700 transition-colors duration-300"
+              className="bg-primary-600 text-white px-4 sm:px-6 py-2 rounded-full font-medium hover:bg-primary-700 transition-colors duration-300 text-sm sm:text-base"
               onClick={() => setShowReview((v) => !v)}
             >
               {showReview ? 'Close Review Form' : 'Leave a Review'}
@@ -127,8 +159,8 @@ export default function Contact() {
           </div>
           {/* Review Form */}
           {showReview && (
-            <form onSubmit={handleReviewSubmit} className="bg-white rounded-xl shadow-lg p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6 mb-12 max-w-lg mx-auto w-full">
-              <h3 className="text-2xl font-bold text-primary-800 mb-4 text-center">Leave a Review</h3>
+            <form onSubmit={handleReviewSubmit} className="bg-white rounded-xl shadow-lg p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6 mb-8 sm:mb-12 max-w-lg mx-auto w-full">
+              <h3 className="text-xl sm:text-2xl font-bold text-primary-800 mb-4 text-center">Leave a Review</h3>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
                 <input
@@ -159,18 +191,15 @@ export default function Contact() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Rating</label>
-                <div className="flex space-x-1">
+                <div className="flex space-x-1 justify-center sm:justify-start">
                   {[1,2,3,4,5].map((star) => (
                     <button
                       type="button"
                       key={star}
                       onClick={() => handleReviewRating(star)}
-                      className={
-                        star <= reviewForm.rating
-                          ? 'text-yellow-400 text-2xl'
-                          : 'text-gray-300 text-2xl'
-                      }
-                      aria-label={`Rate ${star} star${star > 1 ? 's' : ''}`}
+                      className={`text-2xl sm:text-3xl transition-colors duration-200 ${
+                        star <= reviewForm.rating ? 'text-yellow-400' : 'text-gray-300'
+                      }`}
                     >
                       ★
                     </button>
@@ -188,16 +217,15 @@ export default function Contact() {
                   required
                 />
               </div>
-              <button
-                type="submit"
-                className="w-full bg-primary-600 text-white py-2 md:py-3 px-4 md:px-6 rounded-lg font-medium hover:bg-primary-700 transition-colors duration-300"
-                disabled={reviewSubmitting}
-              >
-                {reviewSubmitting ? 'Submitting...' : 'Submit Review'}
-              </button>
-              {reviewSuccess && (
-                <div className="text-green-600 text-center font-medium mt-2">Thank you for your review!</div>
-              )}
+              <div className="flex justify-center">
+                <button
+                  type="submit"
+                  disabled={reviewSubmitting}
+                  className="w-full sm:w-auto px-6 py-2 bg-primary-600 text-white rounded-full font-medium hover:bg-primary-700 transition-colors duration-300 disabled:opacity-50"
+                >
+                  {reviewSubmitting ? 'Submitting...' : 'Submit Review'}
+                </button>
+              </div>
             </form>
           )}
 
@@ -220,7 +248,8 @@ export default function Contact() {
                     </div>
                     <div>
                       <p className="text-sm text-gray-500">Email</p>
-                      <p className="text-gray-700 font-medium">contact@example.com</p>
+                      <p className="text-gray-700 font-medium">poornima.sandeep@tech-shiksha.com 
+</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-4">
@@ -231,7 +260,7 @@ export default function Contact() {
                     </div>
                     <div>
                       <p className="text-sm text-gray-500">Phone</p>
-                      <p className="text-gray-700 font-medium">+1 (555) 123-4567</p>
+                      <p className="text-gray-700 font-medium">+91 92063 26416</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-4">
@@ -243,7 +272,7 @@ export default function Contact() {
                     </div>
                     <div>
                       <p className="text-sm text-gray-500">Location</p>
-                      <p className="text-gray-700 font-medium">New York, NY</p>
+                      <p className="text-gray-700 font-medium">Bangalore, Karnataka, India</p>
                     </div>
                   </div>
                 </div>
@@ -251,18 +280,28 @@ export default function Contact() {
 
               <div className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
                 <h3 className="text-xl font-semibold text-primary-700 mb-4">Follow Us</h3>
-                <div className="flex space-x-4">
-                  {['twitter', 'linkedin', 'instagram', 'facebook'].map((social) => (
-                    <motion.a
-                      key={social}
-                      href="#"
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="bg-primary-100 p-3 rounded-full hover:bg-primary-200 transition-colors duration-300"
-                    >
-                      <img src={`/icons/${social}.svg`} alt={social} className="w-6 h-6" />
-                    </motion.a>
-                  ))}
+                <div className="flex flex-wrap gap-4">
+                  {communityLinks.map((link) => {
+                    const platform = PLATFORM_OPTIONS.find(p => p.value === link.platform);
+                    if (!platform) return null;
+
+                    return (
+                      <motion.a
+                        key={link.id}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.95 }}
+                        className={`${platform.bgColor} p-3 rounded-full hover:opacity-90 transition-all duration-300`}
+                      >
+                        {React.createElement(platform.icon, { 
+                          size: 24,
+                          className: platform.color
+                        })}
+                      </motion.a>
+                    );
+                  })}
                 </div>
               </div>
             </motion.div>

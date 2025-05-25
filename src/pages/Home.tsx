@@ -66,7 +66,7 @@ export default function Home() {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-28">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 sm:pt-20 md:pt-24 lg:pt-28">
         {/* Animated Background */}
         <motion.div 
           className="absolute inset-0 bg-gradient-to-br from-primary-800 via-primary-900 to-secondary-900"
@@ -92,16 +92,16 @@ export default function Home() {
         </motion.div>
 
         {/* Content */}
-        <div className="container mx-auto px-4 z-10">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 z-10">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-8 sm:gap-10 lg:gap-12">
             <motion.div 
-              className="lg:w-1/2" 
+              className="w-full lg:w-1/2 text-center lg:text-left" 
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 1 }}
             >
               <motion.h1 
-                className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white"
+                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 text-white"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.8 }}
@@ -109,7 +109,7 @@ export default function Home() {
                 Transform Your <span className="text-yellow-400 font-extrabold">Digital Success</span>
               </motion.h1>
               <motion.p 
-                className="text-lg md:text-xl mb-8 text-blue-100 font-medium"
+                className="text-base sm:text-lg md:text-xl mb-6 sm:mb-8 text-blue-100 font-medium"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4, duration: 0.8 }}
@@ -117,7 +117,7 @@ export default function Home() {
                 Expert mentorship and training for students and women entrepreneurs. Learn to build your personal brand, gain online visibility, and achieve your professional goals.
               </motion.p>
               <motion.div
-                className="flex flex-wrap gap-4"
+                className="flex flex-col sm:flex-row justify-center lg:justify-start gap-3 sm:gap-4"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6, duration: 0.8 }}
@@ -126,7 +126,7 @@ export default function Home() {
                   whileHover={{ scale: 1.05, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => scrollToSection('what-i-do')}
-                  className="px-8 py-3 bg-primary-600 text-white rounded-full font-medium shadow-lg hover:shadow-xl transition-all duration-300"
+                  className="w-full sm:w-auto px-6 sm:px-8 py-3 bg-primary-600 text-white rounded-full font-medium shadow-lg hover:shadow-xl transition-all duration-300"
                 >
                   Explore Services
                 </motion.button>
@@ -134,7 +134,7 @@ export default function Home() {
                   whileHover={{ scale: 1.05, boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => scrollToSection('contact')}
-                  className="px-8 py-3 bg-white/10 backdrop-blur-sm text-white rounded-full font-medium border border-white/20 hover:bg-white/20 transition-all duration-300"
+                  className="w-full sm:w-auto px-6 sm:px-8 py-3 bg-white/10 backdrop-blur-sm text-white rounded-full font-medium border border-white/20 hover:bg-white/20 transition-all duration-300"
                 >
                   Get in Touch
                 </motion.button>
@@ -142,12 +142,12 @@ export default function Home() {
             </motion.div>
 
             <motion.div
-              className="lg:w-1/2"
+              className="w-full lg:w-1/2 mt-8 lg:mt-0"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.4, duration: 0.8 }}
             >
-              <div className="relative">
+              <div className="relative max-w-md mx-auto lg:max-w-none">
                 <motion.div 
                   className="absolute inset-0 bg-gradient-to-r from-primary-600/20 to-secondary-600/20 rounded-2xl blur-2xl"
                   animate={{ 
@@ -163,7 +163,7 @@ export default function Home() {
                 <motion.img
                   src={poornima}
                   alt="Hero"
-                  className="relative rounded-2xl shadow-2xl"
+                  className="relative rounded-2xl shadow-2xl w-full h-auto"
                   whileHover={{ scale: 1.02 }}
                   transition={{ duration: 0.3 }}
                 />

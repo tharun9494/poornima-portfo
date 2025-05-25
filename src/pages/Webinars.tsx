@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db } from '../firebase/config';
-import { Calendar, Clock, FileText, ExternalLink, ThumbsUp } from 'lucide-react';
-import ReviewForm from '../components/ReviewForm';
-import ReviewList from '../components/ReviewList';
+import { Calendar, Clock, BookOpen, ExternalLink, Video, ChevronDown } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface Webinar {
   id: string;
@@ -15,15 +14,13 @@ interface Webinar {
   formLink: string;
   imageUrl: string;
   description: string;
-  createdAt: any;
-  updatedAt: any;
 }
 
 const Webinars: React.FC = () => {
   const [webinars, setWebinars] = useState<Webinar[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showReviewForm, setShowReviewForm] = useState(false);
-  const [liked, setLiked] = useState(false);
+  const [selectedWebinar, setSelectedWebinar] = useState<Webinar | null>(null);
+  const [expandedWebinar, setExpandedWebinar] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchWebinars = async () => {
@@ -50,96 +47,141 @@ const Webinars: React.FC = () => {
     );
   }
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5
+      }
+    }
+  };
+
+  const toggleExpand = (webinarId: string) => {
+    setExpandedWebinar(expandedWebinar === webinarId ? null : webinarId);
+  };
+
   return (
-    <div className="container mx-auto px-4 py-12">
-      <h1 className="text-4xl font-bold text-center mb-12">Upcoming Webinars</h1>
-      
-      {webinars.length === 0 ? (
-        <p className="text-center text-gray-600">No upcoming webinars at the moment.</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {webinars.map((webinar) => (
-            <div key={webinar.id} className="bg-white rounded-lg shadow-lg overflow-hidden">
-              {webinar.imageUrl && (
-                <img
-                  src={webinar.imageUrl}
-                  alt={webinar.title}
-                  className="w-full h-48 object-cover"
-                />
-              )}
-              <div className="p-6">
-                <h2 className="text-xl font-semibold text-gray-800 mb-2">{webinar.title}</h2>
-                <div className="space-y-2 text-gray-600">
-                  <div className="flex items-center">
-                    <Calendar className="w-5 h-5 mr-2" />
-                    <span>{new Date(webinar.date).toLocaleDateString()}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Clock className="w-5 h-5 mr-2" />
-                    <span>{webinar.time} ({webinar.duration})</span>
-                  </div>
-                </div>
-                <div className="mt-4">
-                  <h3 className="font-medium text-gray-800 mb-2">What You'll Learn:</h3>
-                  <p className="text-gray-600">{webinar.learningOutcomes}</p>
-                </div>
-                <p className="mt-4 text-gray-600">{webinar.description}</p>
-                {webinar.formLink && (
-                  <a
-                    href={webinar.formLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-4 inline-flex items-center text-primary-500 hover:text-primary-600"
-                  >
-                    Register Now
-                    <ExternalLink className="w-4 h-4 ml-1" />
-                  </a>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Reviews Section */}
-      <div className="mt-20">
-        <h2 className="text-3xl font-bold text-center mb-12">Webinar Reviews</h2>
-        <div className="max-w-4xl mx-auto">
-          <ReviewList programType="webinar" />
-        </div>
-      </div>
-
-      {/* Like and Review Form Section */}
-      <div className="mt-20">
-        <h2 className="text-3xl font-bold text-center mb-12">Share Your Experience</h2>
-        <div className="max-w-4xl mx-auto">
-          {!showReviewForm ? (
-            <div className="text-center">
-              <button
-                onClick={() => {
-                  setLiked(true);
-                  setShowReviewForm(true);
-                }}
-                className={`inline-flex items-center px-6 py-3 rounded-lg transition-all duration-300 ${
-                  liked 
-                    ? 'bg-green-500 text-white' 
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+      <div className="container mx-auto px-4 py-12">
+        <motion.h1 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-4xl font-bold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-blue-600"
+        >
+          Upcoming Webinars
+        </motion.h1>
+        
+        {webinars.length === 0 ? (
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center text-gray-600 text-lg"
+          >
+            No upcoming webinars at the moment.
+          </motion.p>
+        ) : (
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
+            {webinars.map((webinar) => (
+              <motion.div
+                key={webinar.id}
+                variants={itemVariants}
+                whileHover={{ scale: 1.02 }}
+                className="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:shadow-xl"
               >
-                <ThumbsUp className={`w-5 h-5 mr-2 ${liked ? 'fill-current' : ''}`} />
-                {liked ? 'Liked!' : 'Like this Webinar'}
-              </button>
-            </div>
-          ) : (
-            <div className="space-y-6">
-              <div className="text-center text-green-600 mb-6">
-                <ThumbsUp className="w-8 h-8 mx-auto mb-2 fill-current" />
-                <p className="text-lg">Thank you for liking this webinar!</p>
-              </div>
-              <ReviewForm />
-            </div>
-          )}
-        </div>
+                {webinar.imageUrl && (
+                  <div className="relative h-48 overflow-hidden">
+                    <img
+                      src={webinar.imageUrl}
+                      alt={webinar.title}
+                      className="w-full h-full object-cover transform transition-transform duration-500 hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute top-4 right-4 bg-primary-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                      <Video className="w-4 h-4 inline-block mr-1" />
+                      Webinar
+                    </div>
+                  </div>
+                )}
+                <div className="p-6">
+                  <h2 className="text-xl font-semibold text-gray-800 mb-3">{webinar.title}</h2>
+                  <div className="space-y-3 text-gray-600">
+                    <div className="flex items-center">
+                      <Calendar className="w-5 h-5 mr-2 text-primary-500" />
+                      <span>{new Date(webinar.date).toLocaleDateString('en-US', { 
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}</span>
+                    </div>
+                    <div className="flex items-center">
+                      <Clock className="w-5 h-5 mr-2 text-primary-500" />
+                      <span>{webinar.time} • {webinar.duration}</span>
+                    </div>
+                  </div>
+                  <div className="mt-4">
+                    <div className="flex items-start">
+                      <BookOpen className="w-5 h-5 mr-2 text-primary-500 mt-1" />
+                      <div>
+                        <h3 className="text-sm font-normal text-gray-800 mb-1">Learning Outcomes:</h3>
+                        <p className={`text-gray-600 ${expandedWebinar === webinar.id ? '' : 'line-clamp-3'}`}>
+                          {webinar.learningOutcomes}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <p className={`mt-4 text-gray-600 ${expandedWebinar === webinar.id ? '' : 'line-clamp-3'}`}>
+                    {webinar.description}
+                  </p>
+                  <div className="mt-4 flex justify-between items-center">
+                    {webinar.formLink && (
+                      <motion.a
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        href={webinar.formLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center px-6 py-3 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors duration-300"
+                      >
+                        Register Now
+                        <ExternalLink className="w-4 h-4 ml-2" />
+                      </motion.a>
+                    )}
+                    <button
+                      onClick={() => toggleExpand(webinar.id)}
+                      className="flex items-center text-primary-500 hover:text-primary-600 transition-colors duration-300"
+                    >
+                      {expandedWebinar === webinar.id ? 'Show Less' : 'Show More'}
+                      <ChevronDown 
+                        className={`w-5 h-5 ml-1 transition-transform duration-300 ${
+                          expandedWebinar === webinar.id ? 'transform rotate-180' : ''
+                        }`}
+                      />
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
       </div>
     </div>
   );
