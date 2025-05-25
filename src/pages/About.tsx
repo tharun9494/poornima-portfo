@@ -44,7 +44,7 @@ export default function About() {
                   personal brand, improve your LinkedIn profile, and open new opportunities.
                 </p>
                 <p>
-                  I also lead two communities — Ainxtgen for students and QueenfluenceHub for women — where
+                  I also lead two communities — Ainxtgen for students and Queenflluence Hub for women — where
                   people support each other and grow together.
                 </p>
                 <p>
@@ -99,7 +99,7 @@ export default function About() {
                   icon: '🎓'
                 },
                 {
-                  title: 'QueenfluenceHub',
+                  title: 'Queenflluence Hub',
                   description: 'Empowering women entrepreneurs to build their businesses and personal brands.',
                   icon: '👑'
                 }

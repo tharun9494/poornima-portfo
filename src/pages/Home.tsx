@@ -282,12 +282,12 @@ export default function Home() {
               <div className="flex items-center">
                 <img 
                   src="https://media.licdn.com/dms/image/v2/D5622AQFaO2OK7ELiLg/feedshare-shrink_1280/feedshare-shrink_1280/0/1723695862368?e=1750896000&v=beta&t=4hzEPUUMZHwJC3o576LE7qGNa9rJhEydECdrqSySBHA" 
-                  alt="Poornima S" 
+                  alt="Poornimma S" 
                   className="w-12 h-12 rounded-full object-cover mr-4"
                 />
                 <div>
-                  <h4 className="font-semibold">Poornima S</h4>
-                  <p className="text-sm text-gray-500">QueenfluenceHub</p>
+                  <h4 className="font-semibold">Poornimma S</h4>
+                  <p className="text-sm text-gray-500">Queenflluence Hub</p>
                 </div>
               </div>
             </div>
