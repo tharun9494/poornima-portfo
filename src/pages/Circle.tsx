@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Building2, GraduationCap } from 'lucide-react';
-import ksit from '../../src/pages/images/ksit.png'
-import mvit from '../../src/pages/images/mvit.png'
+import ksit from './images/ksit.png';
+import mvit from './images/mvit.png';
+
 function Circle() {
   const [imageErrors, setImageErrors] = useState<{ [key: string]: boolean }>({});
 
@@ -50,7 +51,7 @@ function Circle() {
       bgColor: "bg-white"
     },
     {
-      url: {ksit},
+      url: ksit,
       name: "KSIT",
       bgColor: "bg-white"
     },
@@ -80,7 +81,7 @@ function Circle() {
       bgColor: "bg-white"
     },
     {
-      url: {mvit},
+      url: mvit,
       name: "MVIT",
       bgColor: "bg-white"
     },
@@ -97,6 +98,16 @@ function Circle() {
     {
       url: "https://atme.edu.in/wp-content/uploads/2022/04/Logo-200-X-78-01.png",
       name: "ATME",
+      bgColor: "bg-white"
+    },
+    {
+      url: "https://d2e9h3gjmozu47.cloudfront.net/brand.png",
+      name: "Brand College",
+      bgColor: "bg-white"
+    },
+    {
+      url: "https://www.cmrit.ac.in/wp-content/uploads/2021/06/logo.png",
+      name: "CMRIT",
       bgColor: "bg-white"
     }
   ];
