@@ -31,7 +31,7 @@ export default function About() {
               <h2 className="text-3xl md:text-4xl font-bold text-primary-800 mb-6">My Journey</h2>
               <div className="space-y-6 text-lg text-gray-600 leading-relaxed">
                 <p>
-                  Hi, I'm Poornima S — an AI Instructor, Career Coach, and Personal Branding Mentor. I help
+                  Hi, I'm Poornimma S — an AI Instructor, Career Coach, and Personal Branding Mentor. I help
                   students, women entrepreneurs, and teachers gain confidence and find their path.
                 </p>
                 <p>
