@@ -2,14 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc, query, orderBy, Timestamp, writeBatch } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { db, storage } from '../firebase/config';
-import { FileText, Image, MessageSquare, Users, X, Plus, Edit2, Trash2, Save, XCircle, Calendar, Check, Linkedin, Youtube, Instagram, Twitter, Facebook, Globe } from 'lucide-react';
+import { FileText, Image, MessageSquare, Users, X, Plus, Edit2, Trash2, Save, XCircle, Calendar, Check, Linkedin, Youtube, Instagram, Twitter, Facebook, Globe, Star } from 'lucide-react';
 
 interface DashboardStats {
   webinars: number;
   events: number;
   notifications: number;
   eventImages: number;
+  reviews: number;
 }
+
 
 interface Webinar {
   id: string;
@@ -76,6 +78,17 @@ interface ContactMessage {
   status: 'new' | 'read' | 'replied';
 }
 
+// Add new interface for Review
+interface Review {
+  id: string;
+  name: string;
+  role: string;
+  rating: number;
+  review: string;
+  createdAt: any;
+  status: 'pending' | 'approved' | 'rejected';
+}
+
 const PLATFORM_OPTIONS = [
   { value: 'linkedin', label: 'LinkedIn', icon: Linkedin, color: 'text-blue-600' },
   { value: 'youtube', label: 'YouTube', icon: Youtube, color: 'text-red-600' },
@@ -92,6 +105,7 @@ const AdminDashboard: React.FC = () => {
     events: 0,
     notifications: 0,
     eventImages: 0,
+    reviews: 0,
   });
 
   // State for forms
@@ -156,13 +170,28 @@ const AdminDashboard: React.FC = () => {
   });
   const [editingEvent, setEditingEvent] = useState<string | null>(null);
 
+  // Add new state for reviews
+  const [reviews, setReviews] = useState<Review[]>([]);
+
   useEffect(() => {
-    fetchStats();
-    fetchWebinars();
-    fetchEvents();
-    fetchCommunityLinks();
-    fetchGalleryImages();
-    fetchMessages();
+    console.log('Component mounted, fetching initial data...');
+    const fetchAllData = async () => {
+      try {
+        await Promise.all([
+          fetchStats(),
+          fetchWebinars(),
+          fetchEvents(),
+          fetchCommunityLinks(),
+          fetchGalleryImages(),
+          fetchMessages(),
+          fetchReviews()
+        ]);
+      } catch (error) {
+        console.error('Error fetching initial data:', error);
+      }
+    };
+    
+    fetchAllData();
   }, []);
 
   const fetchStats = async () => {
@@ -171,12 +200,14 @@ const AdminDashboard: React.FC = () => {
       const eventsSnapshot = await getDocs(collection(db, 'events'));
       const notificationsSnapshot = await getDocs(collection(db, 'notifications'));
       const imagesSnapshot = await getDocs(collection(db, 'eventImages'));
+      const reviewsSnapshot = await getDocs(collection(db, 'reviews'));
 
       setStats({
         webinars: webinarsSnapshot.size,
         events: eventsSnapshot.size,
         notifications: notificationsSnapshot.size,
         eventImages: imagesSnapshot.size,
+        reviews: reviewsSnapshot.size,
       });
     } catch (error) {
       console.error('Error fetching dashboard stats:', error);
@@ -248,6 +279,51 @@ const AdminDashboard: React.FC = () => {
       setMessages(messageList);
     } catch (error) {
       console.error('Error fetching messages:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchReviews = async () => {
+    try {
+      setLoading(true);
+      console.log('Starting to fetch reviews...');
+      
+      // Get the reviews collection reference
+      const reviewsRef = collection(db, 'reviews');
+      
+      // Create the query with ordering by createdAt
+      const q = query(reviewsRef, orderBy('createdAt', 'desc'));
+      
+      // Get the documents
+      const snapshot = await getDocs(q);
+      console.log('Snapshot received, number of docs:', snapshot.size);
+      
+      // Process each document
+      const reviewList = snapshot.docs.map(doc => {
+        const data = doc.data();
+        console.log('Processing review document:', {
+          id: doc.id,
+          data: data
+        });
+        
+        return {
+          id: doc.id,
+          name: data.name || 'Anonymous',
+          role: data.role || 'Not specified',
+          rating: data.rating || 0,
+          review: data.review || '',
+          createdAt: data.createdAt || Timestamp.now(),
+          status: data.status || 'pending'
+        } as Review;
+      });
+      
+      console.log('Final processed reviews:', reviewList);
+      setReviews(reviewList);
+      
+    } catch (error) {
+      console.error('Error in fetchReviews:', error);
+      setReviews([]);
     } finally {
       setLoading(false);
     }
@@ -568,6 +644,37 @@ const AdminDashboard: React.FC = () => {
       } finally {
         setLoading(false);
       }
+    }
+  };
+
+  // Add these functions after the other handler functions
+  const handleDeleteReview = async (id: string) => {
+    if (window.confirm('Are you sure you want to delete this review?')) {
+      try {
+        setLoading(true);
+        await deleteDoc(doc(db, 'reviews', id));
+        await fetchReviews();
+        await fetchStats();
+      } catch (error) {
+        console.error('Error deleting review:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  const updateReviewStatus = async (reviewId: string, status: 'pending' | 'approved' | 'rejected') => {
+    try {
+      setLoading(true);
+      await updateDoc(doc(db, 'reviews', reviewId), {
+        status,
+        updatedAt: Timestamp.now()
+      });
+      await fetchReviews();
+    } catch (error) {
+      console.error('Error updating review status:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -1691,6 +1798,111 @@ const AdminDashboard: React.FC = () => {
     </div>
   );
 
+  const renderReviews = () => {
+    console.log('Rendering reviews section, current reviews:', reviews);
+    
+    return (
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-xl font-semibold text-gray-800">Manage Reviews</h2>
+          <button onClick={() => setActiveSection('dashboard')} className="text-gray-600 hover:text-gray-800">
+            <X size={24} />
+          </button>
+        </div>
+
+        {/* Reviews List */}
+        <div className="space-y-4">
+          {loading ? (
+            <div className="text-center py-4">
+              <p className="text-gray-500">Loading reviews...</p>
+              <p className="text-sm text-gray-400 mt-2">Please wait while we fetch the reviews.</p>
+            </div>
+          ) : reviews && reviews.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {reviews.map((review) => {
+                console.log('Rendering review:', review);
+                return (
+                  <div
+                    key={review.id}
+                    className={`bg-gray-50 rounded-lg p-4 ${
+                      review.status === 'pending' ? 'border-l-4 border-yellow-500' :
+                      review.status === 'approved' ? 'border-l-4 border-green-500' :
+                      'border-l-4 border-red-500'
+                    }`}
+                  >
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h4 className="font-medium text-gray-900">{review.name}</h4>
+                        <p className="text-sm text-gray-500">{review.role}</p>
+                        <div className="flex items-center mt-1">
+                          {[...Array(5)].map((_, i) => (
+                            <Star
+                              key={i}
+                              size={16}
+                              className={`${
+                                i < review.rating ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300'
+                              }`}
+                            />
+                          ))}
+                        </div>
+                        <p className="text-sm text-gray-500 mt-1">
+                          {review.createdAt?.toDate ? review.createdAt.toDate().toLocaleDateString() : 'No date'}
+                        </p>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          review.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                          review.status === 'approved' ? 'bg-green-100 text-green-800' :
+                          'bg-red-100 text-red-800'
+                        }`}>
+                          {review.status.charAt(0).toUpperCase() + review.status.slice(1)}
+                        </span>
+                        <button
+                          onClick={() => handleDeleteReview(review.id)}
+                          className="text-red-600 hover:text-red-800"
+                        >
+                          <Trash2 size={20} />
+                        </button>
+                      </div>
+                    </div>
+                    <p className="text-gray-600 mt-2">{review.review}</p>
+                    <div className="flex justify-end space-x-2 mt-4">
+                      <button
+                        onClick={() => updateReviewStatus(review.id, 'approved')}
+                        className={`px-3 py-1 rounded ${
+                          review.status === 'approved'
+                            ? 'bg-green-100 text-green-800'
+                            : 'text-green-600 hover:bg-green-50'
+                        }`}
+                      >
+                        <Check size={20} />
+                      </button>
+                      <button
+                        onClick={() => updateReviewStatus(review.id, 'rejected')}
+                        className={`px-3 py-1 rounded ${
+                          review.status === 'rejected'
+                            ? 'bg-red-100 text-red-800'
+                            : 'text-red-600 hover:bg-red-50'
+                        }`}
+                      >
+                        <XCircle size={20} />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="text-center py-4">
+              <p className="text-gray-500">No reviews found</p>
+              <p className="text-sm text-gray-400 mt-2">Reviews will appear here once they are submitted.</p>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="max-w-7xl mx-auto">
@@ -1787,6 +1999,24 @@ const AdminDashboard: React.FC = () => {
               </div>
             </div>
           </div>
+
+          {/* Reviews Card */}
+          <div 
+            className={`bg-white rounded-lg shadow-md p-4 cursor-pointer transition-all duration-300 hover:shadow-lg ${
+              activeSection === 'reviews' ? 'ring-2 ring-yellow-500' : ''
+            }`}
+            onClick={() => setActiveSection(activeSection === 'reviews' ? 'dashboard' : 'reviews')}
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-semibold text-gray-800">Reviews</h2>
+                <p className="text-2xl font-bold text-yellow-600 mt-1">{stats.reviews}</p>
+              </div>
+              <div className="bg-yellow-100 p-2 rounded-full">
+                <Star className="w-5 h-5 text-yellow-600" />
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Active Section Content */}
@@ -1800,6 +2030,7 @@ const AdminDashboard: React.FC = () => {
         {activeSection === 'gallery' && renderGallery()}
         {activeSection === 'community' && renderCommunityLinks()}
         {activeSection === 'messages' && renderMessages()}
+        {activeSection === 'reviews' && renderReviews()}
       </div>
     </div>
   );

@@ -96,7 +96,11 @@ export default function Contact() {
     e.preventDefault();
     setReviewSubmitting(true);
     try {
-      await addDoc(collection(db, 'reviews'), reviewForm);
+      await addDoc(collection(db, 'reviews'), {
+        ...reviewForm,
+        createdAt: new Date(),
+        status: 'new'
+      });
       setReviewSuccess(true);
       setReviewForm({ name: '', role: '', rating: 0, review: '' });
     } catch (err) {
