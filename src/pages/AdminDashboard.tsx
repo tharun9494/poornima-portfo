@@ -39,17 +39,6 @@ interface Event {
   updatedAt: any;
 }
 
-interface Testimonial {
-  id: string;
-  name: string;
-  role: string;
-  imageUrl: string;
-  content: string;
-  rating: number;
-  createdAt: any;
-  updatedAt: any;
-}
-
 interface CommunityLink {
   id: string;
   platform: string;
@@ -108,7 +97,6 @@ const AdminDashboard: React.FC = () => {
   // State for forms
   const [webinars, setWebinars] = useState<Webinar[]>([]);
   const [events, setEvents] = useState<Event[]>([]);
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [communityLinks, setCommunityLinks] = useState<CommunityLink[]>([]);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>('');
@@ -125,18 +113,10 @@ const AdminDashboard: React.FC = () => {
     imageUrl: '',
     description: ''
   });
-  const [newTestimonial, setNewTestimonial] = useState({
-    name: '',
-    role: '',
-    imageUrl: '',
-    content: '',
-    rating: 5
-  });
   const [newCommunityLink, setNewCommunityLink] = useState({ platform: '', url: '' });
 
   // Add new states for editing
   const [editingWebinar, setEditingWebinar] = useState<string | null>(null);
-  const [editingTestimonial, setEditingTestimonial] = useState<string | null>(null);
   const [editingCommunityLink, setEditingCommunityLink] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -180,7 +160,6 @@ const AdminDashboard: React.FC = () => {
     fetchStats();
     fetchWebinars();
     fetchEvents();
-    fetchTestimonials();
     fetchCommunityLinks();
     fetchGalleryImages();
     fetchMessages();
@@ -227,20 +206,6 @@ const AdminDashboard: React.FC = () => {
       setEvents(eventList);
     } catch (error) {
       console.error('Error fetching events:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchTestimonials = async () => {
-    try {
-      setLoading(true);
-      const q = query(collection(db, 'testimonials'), orderBy('createdAt', 'desc'));
-      const snapshot = await getDocs(q);
-      const testimonialList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Testimonial));
-      setTestimonials(testimonialList);
-    } catch (error) {
-      console.error('Error fetching testimonials:', error);
     } finally {
       setLoading(false);
     }
@@ -341,62 +306,6 @@ const AdminDashboard: React.FC = () => {
         await fetchStats();
       } catch (error) {
         console.error('Error deleting webinar:', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-  };
-
-  const handleAddTestimonial = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      setLoading(true);
-      await addDoc(collection(db, 'testimonials'), {
-        ...newTestimonial,
-        createdAt: Timestamp.now(),
-        updatedAt: Timestamp.now()
-      });
-      setNewTestimonial({
-        name: '',
-        role: '',
-        imageUrl: '',
-        content: '',
-        rating: 5
-      });
-      await fetchTestimonials();
-      await fetchStats();
-    } catch (error) {
-      console.error('Error adding testimonial:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleUpdateTestimonial = async (id: string, updatedData: Partial<Testimonial>) => {
-    try {
-      setLoading(true);
-      await updateDoc(doc(db, 'testimonials', id), {
-        ...updatedData,
-        updatedAt: Timestamp.now()
-      });
-      setEditingTestimonial(null);
-      await fetchTestimonials();
-    } catch (error) {
-      console.error('Error updating testimonial:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleDeleteTestimonial = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this testimonial?')) {
-      try {
-        setLoading(true);
-        await deleteDoc(doc(db, 'testimonials', id));
-        await fetchTestimonials();
-        await fetchStats();
-      } catch (error) {
-        console.error('Error deleting testimonial:', error);
       } finally {
         setLoading(false);
       }
@@ -1290,264 +1199,6 @@ const AdminDashboard: React.FC = () => {
     </div>
   );
 
-  // Update the testimonials section in the return statement
-  const renderTestimonials = () => (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-gray-800">Manage Testimonials</h2>
-        <button onClick={() => setActiveSection('dashboard')} className="text-gray-600 hover:text-gray-800">
-          <X size={24} />
-        </button>
-      </div>
-
-      {/* Add Testimonial Form */}
-      <form onSubmit={handleAddTestimonial} className="space-y-6 mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Name</label>
-            <input
-              type="text"
-              value={newTestimonial.name}
-              onChange={(e) => setNewTestimonial({ ...newTestimonial, name: e.target.value })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
-              placeholder="Enter name"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Role</label>
-            <input
-              type="text"
-              value={newTestimonial.role}
-              onChange={(e) => setNewTestimonial({ ...newTestimonial, role: e.target.value })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
-              placeholder="Enter role/position"
-              required
-            />
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Image URL</label>
-          <input
-            type="url"
-            value={newTestimonial.imageUrl}
-            onChange={(e) => setNewTestimonial({ ...newTestimonial, imageUrl: e.target.value })}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
-            placeholder="https://example.com/image.jpg"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Content</label>
-          <textarea
-            value={newTestimonial.content}
-            onChange={(e) => setNewTestimonial({ ...newTestimonial, content: e.target.value })}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
-            rows={3}
-            placeholder="Enter testimonial content"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Rating</label>
-          <div className="flex items-center space-x-2">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <button
-                key={star}
-                type="button"
-                onClick={() => setNewTestimonial({ ...newTestimonial, rating: star })}
-                className={`text-2xl ${
-                  star <= newTestimonial.rating ? 'text-yellow-400' : 'text-gray-300'
-                }`}
-              >
-                ★
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {loading ? 'Adding...' : 'Add Testimonial'}
-        </button>
-      </form>
-
-      {/* Testimonials List */}
-      <div className="border-t pt-6">
-        <h3 className="font-medium text-gray-700 mb-4">Recent Testimonials</h3>
-        {loading ? (
-          <div className="text-center py-4">Loading...</div>
-        ) : testimonials.length > 0 ? (
-          <div className="space-y-4">
-            {testimonials.map((testimonial) => (
-              <div key={testimonial.id} className="bg-gray-50 rounded-lg p-4">
-                {editingTestimonial === testimonial.id ? (
-                  <form onSubmit={(e) => {
-                    e.preventDefault();
-                    handleUpdateTestimonial(testimonial.id, testimonial);
-                  }} className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">Name</label>
-                        <input
-                          type="text"
-                          value={testimonial.name}
-                          onChange={(e) => {
-                            const updatedTestimonials = testimonials.map(t =>
-                              t.id === testimonial.id ? { ...t, name: e.target.value } : t
-                            );
-                            setTestimonials(updatedTestimonials);
-                          }}
-                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
-                          required
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">Role</label>
-                        <input
-                          type="text"
-                          value={testimonial.role}
-                          onChange={(e) => {
-                            const updatedTestimonials = testimonials.map(t =>
-                              t.id === testimonial.id ? { ...t, role: e.target.value } : t
-                            );
-                            setTestimonials(updatedTestimonials);
-                          }}
-                          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
-                          required
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Image URL</label>
-                      <input
-                        type="url"
-                        value={testimonial.imageUrl}
-                        onChange={(e) => {
-                          const updatedTestimonials = testimonials.map(t =>
-                            t.id === testimonial.id ? { ...t, imageUrl: e.target.value } : t
-                          );
-                          setTestimonials(updatedTestimonials);
-                        }}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Content</label>
-                      <textarea
-                        value={testimonial.content}
-                        onChange={(e) => {
-                          const updatedTestimonials = testimonials.map(t =>
-                            t.id === testimonial.id ? { ...t, content: e.target.value } : t
-                          );
-                          setTestimonials(updatedTestimonials);
-                        }}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring-yellow-500"
-                        rows={3}
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Rating</label>
-                      <div className="flex items-center space-x-2">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <button
-                            key={star}
-                            type="button"
-                            onClick={() => {
-                              const updatedTestimonials = testimonials.map(t =>
-                                t.id === testimonial.id ? { ...t, rating: star } : t
-                              );
-                              setTestimonials(updatedTestimonials);
-                            }}
-                            className={`text-2xl ${
-                              star <= testimonial.rating ? 'text-yellow-400' : 'text-gray-300'
-                            }`}
-                          >
-                            ★
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="flex justify-end space-x-2">
-                      <button
-                        type="button"
-                        onClick={() => setEditingTestimonial(null)}
-                        className="px-3 py-1 text-gray-600 hover:text-gray-800"
-                      >
-                        <XCircle size={20} />
-                      </button>
-                      <button
-                        type="submit"
-                        className="px-3 py-1 text-yellow-600 hover:text-yellow-800"
-                      >
-                        <Save size={20} />
-                      </button>
-                    </div>
-                  </form>
-                ) : (
-                  <div className="flex space-x-4">
-                    <div className="flex-shrink-0">
-                      <img
-                        src={testimonial.imageUrl}
-                        alt={testimonial.name}
-                        className="w-16 h-16 rounded-full object-cover"
-                      />
-                    </div>
-                    <div className="flex-grow">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h4 className="font-medium text-gray-900">{testimonial.name}</h4>
-                          <p className="text-sm text-gray-500">{testimonial.role}</p>
-                          <div className="flex items-center mt-1">
-                            {[1, 2, 3, 4, 5].map((star) => (
-                              <span
-                                key={star}
-                                className={`text-lg ${
-                                  star <= testimonial.rating ? 'text-yellow-400' : 'text-gray-300'
-                                }`}
-                              >
-                                ★
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                        <div className="flex space-x-2">
-                          <button
-                            onClick={() => setEditingTestimonial(testimonial.id)}
-                            className="text-yellow-600 hover:text-yellow-800"
-                          >
-                            <Edit2 size={20} />
-                          </button>
-                          <button
-                            onClick={() => handleDeleteTestimonial(testimonial.id)}
-                            className="text-red-600 hover:text-red-800"
-                          >
-                            <Trash2 size={20} />
-                          </button>
-                        </div>
-                      </div>
-                      <p className="text-gray-600 mt-2">{testimonial.content}</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-gray-500 text-center py-4">No testimonials found</p>
-        )}
-      </div>
-    </div>
-  );
-
   // Update the community section in the return statement
   const renderCommunityLinks = () => (
     <div className="bg-white rounded-lg shadow-md p-6">
@@ -2101,24 +1752,6 @@ const AdminDashboard: React.FC = () => {
             </div>
           </div>
 
-          {/* Testimonials Card */}
-          <div 
-            className={`bg-white rounded-lg shadow-md p-4 cursor-pointer transition-all duration-300 hover:shadow-lg ${
-              activeSection === 'testimonials' ? 'ring-2 ring-yellow-500' : ''
-            }`}
-            onClick={() => setActiveSection(activeSection === 'testimonials' ? 'dashboard' : 'testimonials')}
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-lg font-semibold text-gray-800">Testimonials</h2>
-                <p className="text-2xl font-bold text-yellow-600 mt-1">{testimonials.length}</p>
-              </div>
-              <div className="bg-yellow-100 p-2 rounded-full">
-                <MessageSquare className="w-5 h-5 text-yellow-600" />
-              </div>
-            </div>
-          </div>
-
           {/* Community Card */}
           <div 
             className={`bg-white rounded-lg shadow-md p-4 cursor-pointer transition-all duration-300 hover:shadow-lg ${
@@ -2165,7 +1798,6 @@ const AdminDashboard: React.FC = () => {
         {activeSection === 'webinars' && renderWebinars()}
         {activeSection === 'events' && renderEvents()}
         {activeSection === 'gallery' && renderGallery()}
-        {activeSection === 'testimonials' && renderTestimonials()}
         {activeSection === 'community' && renderCommunityLinks()}
         {activeSection === 'messages' && renderMessages()}
       </div>
