@@ -22,7 +22,7 @@ export default function Footer() {
               <img src={logo1} alt="Logo" className="h-24 w-auto" />
             </div>
             <p className="text-gray-300 text-sm mb-4">
-              Empowering students and women to build their personal brand and gain digital visibility.
+            Empowering students, women, and aspiring trainers to build their personal brand and digital visibility footer
             </p>
             <div className="flex space-x-3">
               <a href="https://www.linkedin.com/in/poornimmas/" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-primary-500 transition duration-300">

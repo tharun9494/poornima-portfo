@@ -58,5 +58,11 @@ service cloud.firestore {
       allow write: if true;  // Allow anyone to submit reviews
       allow update, delete: if isAuthenticated();  // Only authenticated users can modify/delete
     }
+
+    // Rules for teamMembers collection
+    match /teamMembers/{document=**} {
+      allow read: if true;  // Allow public read access
+      allow write: if isAuthenticated();  // Only authenticated users can write
+    }
   }
 } 

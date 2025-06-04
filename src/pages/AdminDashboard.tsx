@@ -89,6 +89,17 @@ interface Review {
   status: 'pending' | 'approved' | 'rejected';
 }
 
+// Add new interface for Team Member
+interface TeamMember {
+  id: string;
+  name: string;
+  role: string;
+  profileUrl: string;
+  linkedinUrl: string;
+  createdAt: any;
+  updatedAt: any;
+}
+
 const PLATFORM_OPTIONS = [
   { value: 'linkedin', label: 'LinkedIn', icon: Linkedin, color: 'text-blue-600' },
   { value: 'youtube', label: 'YouTube', icon: Youtube, color: 'text-red-600' },
@@ -173,6 +184,16 @@ const AdminDashboard: React.FC = () => {
   // Add new state for reviews
   const [reviews, setReviews] = useState<Review[]>([]);
 
+  // Add new state for team members
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+  const [newTeamMember, setNewTeamMember] = useState({
+    name: '',
+    role: '',
+    profileUrl: '',
+    linkedinUrl: ''
+  });
+  const [editingTeamMember, setEditingTeamMember] = useState<string | null>(null);
+
   useEffect(() => {
     console.log('Component mounted, fetching initial data...');
     const fetchAllData = async () => {
@@ -184,7 +205,8 @@ const AdminDashboard: React.FC = () => {
           fetchCommunityLinks(),
           fetchGalleryImages(),
           fetchMessages(),
-          fetchReviews()
+          fetchReviews(),
+          fetchTeamMembers() // Add this line
         ]);
       } catch (error) {
         console.error('Error fetching initial data:', error);
@@ -324,6 +346,20 @@ const AdminDashboard: React.FC = () => {
     } catch (error) {
       console.error('Error in fetchReviews:', error);
       setReviews([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchTeamMembers = async () => {
+    try {
+      setLoading(true);
+      const q = query(collection(db, 'teamMembers'), orderBy('createdAt', 'desc'));
+      const snapshot = await getDocs(q);
+      const memberList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as TeamMember));
+      setTeamMembers(memberList);
+    } catch (error) {
+      console.error('Error fetching team members:', error);
     } finally {
       setLoading(false);
     }
@@ -675,6 +711,68 @@ const AdminDashboard: React.FC = () => {
       console.error('Error updating review status:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleAddTeamMember = async (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('Starting to add team member...');
+    console.log('New team member data:', newTeamMember);
+    try {
+      setLoading(true);
+      const docRef = await addDoc(collection(db, 'teamMembers'), {
+        ...newTeamMember,
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now()
+      });
+      console.log('Team member added successfully with ID:', docRef.id);
+      setNewTeamMember({
+        name: '',
+        role: '',
+        profileUrl: '',
+        linkedinUrl: ''
+      });
+      await fetchTeamMembers();
+      console.log('Team members list refreshed');
+    } catch (error: any) {
+      console.error('Error adding team member:', error);
+      console.error('Error details:', {
+        message: error?.message,
+        code: error?.code,
+        stack: error?.stack
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUpdateTeamMember = async (id: string, updatedData: Partial<TeamMember>) => {
+    try {
+      setLoading(true);
+      await updateDoc(doc(db, 'teamMembers', id), {
+        ...updatedData,
+        updatedAt: Timestamp.now()
+      });
+      setEditingTeamMember(null);
+      await fetchTeamMembers();
+    } catch (error) {
+      console.error('Error updating team member:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteTeamMember = async (id: string) => {
+    if (window.confirm('Are you sure you want to delete this team member?')) {
+      try {
+        setLoading(true);
+        await deleteDoc(doc(db, 'teamMembers', id));
+        await fetchTeamMembers();
+      } catch (error) {
+        console.error('Error deleting team member:', error);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -1903,6 +2001,205 @@ const AdminDashboard: React.FC = () => {
     );
   };
 
+  // Add new render function for team members section
+  const renderTeamMembers = () => (
+    <div className="bg-white rounded-lg shadow-md p-6">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-semibold text-gray-800">Manage Team Connections</h2>
+        <button onClick={() => setActiveSection('dashboard')} className="text-gray-600 hover:text-gray-800">
+          <X size={24} />
+        </button>
+      </div>
+
+      {/* Add Team Member Form */}
+      <form onSubmit={handleAddTeamMember} className="space-y-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Name</label>
+            <input
+              type="text"
+              value={newTeamMember.name}
+              onChange={(e) => setNewTeamMember({ ...newTeamMember, name: e.target.value })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+              placeholder="Enter team member name"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Role</label>
+            <input
+              type="text"
+              value={newTeamMember.role}
+              onChange={(e) => setNewTeamMember({ ...newTeamMember, role: e.target.value })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+              placeholder="Enter team member role"
+              required
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Profile Image URL</label>
+            <input
+              type="url"
+              value={newTeamMember.profileUrl}
+              onChange={(e) => setNewTeamMember({ ...newTeamMember, profileUrl: e.target.value })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+              placeholder="https://example.com/profile.jpg"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">LinkedIn Profile URL</label>
+            <input
+              type="url"
+              value={newTeamMember.linkedinUrl}
+              onChange={(e) => setNewTeamMember({ ...newTeamMember, linkedinUrl: e.target.value })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+              placeholder="https://linkedin.com/in/username"
+              required
+            />
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-teal-500 text-white px-4 py-2 rounded-lg hover:bg-teal-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {loading ? 'Adding...' : 'Add Team Member'}
+        </button>
+      </form>
+
+      {/* Team Members List */}
+      <div className="border-t pt-6">
+        <h3 className="font-medium text-gray-700 mb-4">Team Members</h3>
+        {loading ? (
+          <div className="text-center py-4">Loading...</div>
+        ) : teamMembers.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {teamMembers.map((member) => (
+              <div key={member.id} className="bg-gray-50 rounded-lg p-4">
+                {editingTeamMember === member.id ? (
+                  <form onSubmit={(e) => {
+                    e.preventDefault();
+                    handleUpdateTeamMember(member.id, member);
+                  }} className="space-y-4">
+                    <div className="grid grid-cols-1 gap-4">
+                      <input
+                        type="text"
+                        value={member.name}
+                        onChange={(e) => {
+                          const updatedMembers = teamMembers.map(m =>
+                            m.id === member.id ? { ...m, name: e.target.value } : m
+                          );
+                          setTeamMembers(updatedMembers);
+                        }}
+                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+                        placeholder="Name"
+                      />
+                      <input
+                        type="text"
+                        value={member.role}
+                        onChange={(e) => {
+                          const updatedMembers = teamMembers.map(m =>
+                            m.id === member.id ? { ...m, role: e.target.value } : m
+                          );
+                          setTeamMembers(updatedMembers);
+                        }}
+                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+                        placeholder="Role"
+                      />
+                      <input
+                        type="url"
+                        value={member.profileUrl}
+                        onChange={(e) => {
+                          const updatedMembers = teamMembers.map(m =>
+                            m.id === member.id ? { ...m, profileUrl: e.target.value } : m
+                          );
+                          setTeamMembers(updatedMembers);
+                        }}
+                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+                        placeholder="Profile Image URL"
+                      />
+                      <input
+                        type="url"
+                        value={member.linkedinUrl}
+                        onChange={(e) => {
+                          const updatedMembers = teamMembers.map(m =>
+                            m.id === member.id ? { ...m, linkedinUrl: e.target.value } : m
+                          );
+                          setTeamMembers(updatedMembers);
+                        }}
+                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+                        placeholder="LinkedIn URL"
+                      />
+                    </div>
+                    <div className="flex justify-end space-x-2">
+                      <button
+                        type="button"
+                        onClick={() => setEditingTeamMember(null)}
+                        className="px-3 py-1 text-gray-600 hover:text-gray-800"
+                      >
+                        <XCircle size={20} />
+                      </button>
+                      <button
+                        type="submit"
+                        className="px-3 py-1 text-teal-600 hover:text-teal-800"
+                      >
+                        <Save size={20} />
+                      </button>
+                    </div>
+                  </form>
+                ) : (
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-3">
+                      <img
+                        src={member.profileUrl}
+                        alt={member.name}
+                        className="w-16 h-16 rounded-full object-cover"
+                      />
+                      <div>
+                        <h4 className="font-medium text-gray-900">{member.name}</h4>
+                        <p className="text-sm text-gray-500">{member.role}</p>
+                      </div>
+                    </div>
+                    <a
+                      href={member.linkedinUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-teal-600 hover:text-teal-800 text-sm flex items-center"
+                    >
+                      <Linkedin size={16} className="mr-1" />
+                      LinkedIn Profile
+                    </a>
+                    <div className="flex justify-end space-x-2">
+                      <button
+                        onClick={() => setEditingTeamMember(member.id)}
+                        className="text-teal-600 hover:text-teal-800"
+                      >
+                        <Edit2 size={20} />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteTeamMember(member.id)}
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        <Trash2 size={20} />
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-500 text-center py-4">No team members found</p>
+        )}
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="max-w-7xl mx-auto">
@@ -2017,6 +2314,24 @@ const AdminDashboard: React.FC = () => {
               </div>
             </div>
           </div>
+
+          {/* Team Members Card */}
+          <div 
+            className={`bg-white rounded-lg shadow-md p-4 cursor-pointer transition-all duration-300 hover:shadow-lg ${
+              activeSection === 'team' ? 'ring-2 ring-teal-500' : ''
+            }`}
+            onClick={() => setActiveSection(activeSection === 'team' ? 'dashboard' : 'team')}
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-semibold text-gray-800">Team</h2>
+                <p className="text-2xl font-bold text-teal-600 mt-1">{teamMembers.length}</p>
+              </div>
+              <div className="bg-teal-100 p-2 rounded-full">
+                <Users className="w-5 h-5 text-teal-600" />
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Active Section Content */}
@@ -2031,6 +2346,7 @@ const AdminDashboard: React.FC = () => {
         {activeSection === 'community' && renderCommunityLinks()}
         {activeSection === 'messages' && renderMessages()}
         {activeSection === 'reviews' && renderReviews()}
+        {activeSection === 'team' && renderTeamMembers()}
       </div>
     </div>
   );

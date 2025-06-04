@@ -9,7 +9,8 @@ import {
   Gift,
   Users,
   BookOpenCheck,
-  Sparkles
+  Sparkles,
+  TrendingUp
 } from 'lucide-react';
 
 const containerVariants = {
@@ -93,6 +94,18 @@ function WhatIDo() {
     description: "Access our collection of free resources designed to kickstart your professional journey. From comprehensive LinkedIn checklists to professional resume templates and vision board guides, these tools will help you take the first step towards building your personal brand and achieving your career goals."
   };
 
+  const stepIntoTraining = {
+    title: "Step Into Training",
+    icon: <TrendingUp className="w-8 h-8 sm:w-12 sm:h-12 text-primary-600" />,
+    description: "Transform your expertise into a profitable training business. Learn how to package your knowledge, create engaging content, and build a sustainable income stream through training and coaching.",
+    features: [
+      "Content Creation & Packaging",
+      "Pricing & Revenue Models",
+      "Marketing & Client Acquisition",
+      "Business Operations & Scaling"
+    ]
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-16">
@@ -142,13 +155,13 @@ function WhatIDo() {
           ))}
         </motion.div>
 
-        {/* Workshops and Freebies Section - Side by Side */}
+        {/* Three Column Section for Workshops, Freebies, and Step Into Training */}
         <motion.div 
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8"
+          className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8"
         >
           {/* Workshops Section */}
           <motion.div variants={itemVariants}>
@@ -180,6 +193,29 @@ function WhatIDo() {
               <p className="text-gray-600 leading-relaxed text-sm sm:text-base">
                 {freebies.description}
               </p>
+            </div>
+          </motion.div>
+
+          {/* Step Into Training Section */}
+          <motion.div variants={itemVariants}>
+            <div className="bg-gradient-to-br from-primary-50 to-white rounded-2xl shadow-lg p-6 sm:p-8 hover:shadow-2xl transition-all duration-300 h-full border border-primary-100">
+              <div className="flex items-center gap-2 sm:gap-4 mb-3 sm:mb-6">
+                <div className="p-1.5 sm:p-2 bg-primary-100 rounded-full">
+                  {stepIntoTraining.icon}
+                </div>
+                <h2 className="text-xl sm:text-2xl font-bold text-primary-800">{stepIntoTraining.title}</h2>
+              </div>
+              <p className="text-gray-600 leading-relaxed mb-4 sm:mb-6 text-sm sm:text-base">
+                {stepIntoTraining.description}
+              </p>
+              <ul className="space-y-2">
+                {stepIntoTraining.features.map((feature, index) => (
+                  <li key={index} className="flex items-center gap-2 text-sm sm:text-base text-gray-700">
+                    <span className="text-primary-600">•</span>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
             </div>
           </motion.div>
         </motion.div>

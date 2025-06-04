@@ -1,9 +1,8 @@
-import { useEffect, useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import * as THREE from 'three';
 
-export default function AnimatedSpheres() {
+const AnimatedSpheres: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const mouse = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -12,99 +11,127 @@ export default function AnimatedSpheres() {
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     containerRef.current.appendChild(renderer.domElement);
 
-    // Create spheres with more variety
+    // Create multiple spheres with different properties
     const spheres: THREE.Mesh[] = [];
-    const sphereCount = 22;
-    const geometries = [
-      new THREE.SphereGeometry(1, 32, 32),
-      new THREE.SphereGeometry(0.7, 32, 32),
-      new THREE.SphereGeometry(1.3, 32, 32)
+    const sphereCount = 15;
+    const colors = [
+      0xff6b6b, // Coral
+      0x4ecdc4, // Turquoise
+      0x45b7d1, // Sky Blue
+      0x96ceb4, // Sage
+      0xffeead, // Cream
+      0xff9999, // Pink
+      0x99ccff, // Light Blue
     ];
+
     for (let i = 0; i < sphereCount; i++) {
-      const color = new THREE.Color(
-        0.5 + Math.random() * 0.5,
-        0.5 + Math.random() * 0.5,
-        0.7 + Math.random() * 0.3
+      const geometry = new THREE.SphereGeometry(
+        Math.random() * 0.5 + 0.2, // Random size between 0.2 and 0.7
+        32,
+        32
       );
-      const material = new THREE.MeshPhysicalMaterial({
-        color,
+      
+      const material = new THREE.MeshPhongMaterial({
+        color: colors[Math.floor(Math.random() * colors.length)],
         transparent: true,
-        opacity: 0.5 + Math.random() * 0.3,
-        roughness: 0.2,
-        metalness: 0.7,
-        clearcoat: 1,
-        clearcoatRoughness: 0.1,
-        emissive: color.clone().multiplyScalar(0.2 + Math.random() * 0.3),
-        emissiveIntensity: 0.5 + Math.random() * 0.5,
+        opacity: 0.6,
+        shininess: 100,
+        specular: 0x444444,
       });
-      const geometry = geometries[Math.floor(Math.random() * geometries.length)];
+
       const sphere = new THREE.Mesh(geometry, material);
-      sphere.position.set(
-        (Math.random() - 0.5) * 18,
-        (Math.random() - 0.5) * 18,
-        (Math.random() - 0.5) * 18
-      );
-      sphere.scale.setScalar(Math.random() * 0.7 + 0.5);
+      
+      // Random position within a larger space
+      sphere.position.x = (Math.random() - 0.5) * 10;
+      sphere.position.y = (Math.random() - 0.5) * 10;
+      sphere.position.z = (Math.random() - 0.5) * 10;
+      
+      // Store initial position for animation
+      sphere.userData = {
+        initialX: sphere.position.x,
+        initialY: sphere.position.y,
+        initialZ: sphere.position.z,
+        speed: Math.random() * 0.02 + 0.01,
+        rotationSpeed: Math.random() * 0.02 + 0.01,
+      };
+
       spheres.push(sphere);
       scene.add(sphere);
     }
 
-    // Add lights
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+    // Add ambient light
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(ambientLight);
-    const pointLight = new THREE.PointLight(0xffffff, 1.2, 100);
-    pointLight.position.set(10, 20, 20);
-    scene.add(pointLight);
-    const pointLight2 = new THREE.PointLight(0x8ecae6, 0.7, 100);
-    pointLight2.position.set(-15, -10, 10);
+
+    // Add point lights
+    const pointLight1 = new THREE.PointLight(0xffffff, 1);
+    pointLight1.position.set(5, 5, 5);
+    scene.add(pointLight1);
+
+    const pointLight2 = new THREE.PointLight(0xffffff, 1);
+    pointLight2.position.set(-5, -5, -5);
     scene.add(pointLight2);
 
-    // Camera position
-    camera.position.z = 15;
+    camera.position.z = 5;
 
-    // Mouse parallax
-    const onMouseMove = (e: MouseEvent) => {
-      mouse.current.x = (e.clientX / window.innerWidth) * 2 - 1;
-      mouse.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    // Mouse movement effect
+    let mouseX = 0;
+    let mouseY = 0;
+    const handleMouseMove = (event: MouseEvent) => {
+      mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+      mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
     };
-    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mousemove', handleMouseMove);
 
     // Animation
     const animate = () => {
       requestAnimationFrame(animate);
-      // Parallax camera
-      camera.position.x += (mouse.current.x * 3 - camera.position.x) * 0.05;
-      camera.position.y += (mouse.current.y * 2 - camera.position.y) * 0.05;
-      camera.lookAt(0, 0, 0);
-      // Animate spheres
-      spheres.forEach((sphere, i) => {
-        const t = Date.now() * 0.001 + i;
-        sphere.position.x += Math.sin(t + i) * 0.008 + Math.cos(t * 0.7 + i) * 0.006;
-        sphere.position.y += Math.cos(t + i) * 0.008 + Math.sin(t * 0.5 + i) * 0.006;
-        sphere.position.z += Math.sin(t * 0.3 + i) * 0.004;
-        sphere.rotation.x += 0.002 * (i % 3 + 1);
-        sphere.rotation.y += 0.003 * (i % 2 + 1);
+
+      // Update sphere positions and rotations
+      spheres.forEach((sphere) => {
+        const time = Date.now() * sphere.userData.speed;
+        
+        // Create floating motion
+        sphere.position.x = sphere.userData.initialX + Math.sin(time) * 0.5;
+        sphere.position.y = sphere.userData.initialY + Math.cos(time) * 0.5;
+        sphere.position.z = sphere.userData.initialZ + Math.sin(time * 0.5) * 0.5;
+
+        // Add rotation
+        sphere.rotation.x += sphere.userData.rotationSpeed;
+        sphere.rotation.y += sphere.userData.rotationSpeed;
+
+        // Mouse interaction
+        sphere.position.x += (mouseX * 0.5 - sphere.position.x) * 0.05;
+        sphere.position.y += (mouseY * 0.5 - sphere.position.y) * 0.05;
       });
+
+      // Update camera position based on mouse movement
+      camera.position.x += (mouseX * 2 - camera.position.x) * 0.02;
+      camera.position.y += (-mouseY * 2 - camera.position.y) * 0.02;
+      camera.lookAt(scene.position);
+
       renderer.render(scene, camera);
     };
 
-    // Handle resize
+    // Handle window resize
     const handleResize = () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     };
     window.addEventListener('resize', handleResize);
+
     animate();
 
     // Cleanup
     return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('resize', handleResize);
-      window.removeEventListener('mousemove', onMouseMove);
       containerRef.current?.removeChild(renderer.domElement);
       scene.clear();
     };
@@ -113,8 +140,10 @@ export default function AnimatedSpheres() {
   return (
     <div 
       ref={containerRef} 
-      className="absolute inset-0"
+      className="absolute inset-0 overflow-hidden"
       style={{ pointerEvents: 'none' }}
     />
   );
-} 
+};
+
+export default AnimatedSpheres; 

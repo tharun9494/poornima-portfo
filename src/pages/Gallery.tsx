@@ -75,35 +75,43 @@ const Gallery: React.FC = () => {
       {filteredImages.length === 0 ? (
         <p className="text-center text-gray-600 text-sm sm:text-base">No images found in this section.</p>
       ) : (
-        <div className="columns-1 sm:columns-2 lg:columns-3 gap-3 sm:gap-4 space-y-3 sm:space-y-4">
-          {filteredImages.map((image) => (
-            <motion.div
-              key={image.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="break-inside-avoid mb-3 sm:mb-4"
-            >
-              <div 
-                className="relative group cursor-pointer overflow-hidden rounded-lg"
-                onClick={() => setSelectedImage(image)}
-              >
-                <img
-                  src={image.url}
-                  alt={image.eventName}
-                  className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 flex items-end">
-                  <div className="p-3 sm:p-4 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                    <h3 className="text-lg sm:text-xl font-semibold mb-1 sm:mb-2">{image.eventName}</h3>
-                    <p className="text-xs sm:text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      {image.description}
-                    </p>
+        <div className="relative">
+          <div className="overflow-x-auto pb-6 hide-scrollbar">
+            <div className="flex gap-4 px-4 min-w-max">
+              {filteredImages.map((image) => (
+                <motion.div
+                  key={image.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="flex-shrink-0 w-72"
+                >
+                  <div 
+                    className="relative group cursor-pointer overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                    onClick={() => setSelectedImage(image)}
+                  >
+                    <img
+                      src={image.url}
+                      alt={image.eventName}
+                      className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 flex items-end">
+                      <div className="p-4 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                        <h3 className="text-lg font-semibold mb-1">{image.eventName}</h3>
+                        <p className="text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          {image.description}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
+                </motion.div>
+              ))}
+            </div>
+          </div>
+          
+          {/* Gradient overlays for scroll indication */}
+          <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-white to-transparent pointer-events-none"></div>
+          <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-white to-transparent pointer-events-none"></div>
         </div>
       )}
 

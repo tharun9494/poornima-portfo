@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Building2, GraduationCap } from 'lucide-react';
 import ksit from './images/ksit.png';
 import mvit from './images/mvit.png';
+import TeamSection from '../components/TeamSection';
 
 function Circle() {
   const [imageErrors, setImageErrors] = useState<{ [key: string]: boolean }>({});
@@ -229,6 +230,9 @@ function Circle() {
             ))}
           </div>
         </motion.div>
+
+        {/* Team Section */}
+        <TeamSection />
       </div>
     </div>
   );
