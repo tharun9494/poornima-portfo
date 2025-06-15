@@ -1,6 +1,6 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
-import AnimatedSpheres from '../components/3d/AnimatedSpheres';
-import poornima from './images/poornima.png'
+import poornima from './images/poornima.png';
+import backgroundVideo from './images/background.mp4';
 import { useState, useEffect } from 'react';
 import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 import { db } from '../firebase/config';
@@ -67,29 +67,20 @@ export default function Home() {
     <>
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 sm:pt-20 md:pt-24 lg:pt-28">
-        {/* Animated Background */}
-        <motion.div 
-          className="absolute inset-0 bg-gradient-to-br from-primary-800 via-primary-900 to-secondary-900"
-          style={{ opacity, scale }}
-        >
-          <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
-          <motion.div
-            className="absolute inset-0"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1 }}
+        {/* Video Background */}
+        <div className="absolute inset-0 w-full h-full overflow-hidden">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute min-w-full min-h-full object-cover"
+            style={{ filter: 'brightness(0.7)' }}
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-primary-600/20 to-secondary-600/20 animate-gradient-x"></div>
-          </motion.div>
-        </motion.div>
-
-        {/* 3D Spheres */}
-        <motion.div 
-          className="absolute inset-0 z-0"
-          style={{ opacity, scale }}
-        >
-          <AnimatedSpheres />
-        </motion.div>
+            <source src={backgroundVideo} type="video/mp4" />
+          </video>
+          <div className="absolute inset-0 bg-gradient-to-br from-primary-800/50 via-primary-900/50 to-secondary-900/50"></div>
+        </div>
 
         {/* Content */}
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 z-10">
