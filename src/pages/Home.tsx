@@ -1,9 +1,9 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import poornima from './images/poornima.png';
-import backgroundVideo from './images/background.mp4';
 import { useState, useEffect } from 'react';
 import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 import { db } from '../firebase/config';
+import AnimatedBackground from '../components/AnimatedBackground';
 
 interface Webinar {
   id: string;
@@ -67,20 +67,8 @@ export default function Home() {
     <>
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 sm:pt-20 md:pt-24 lg:pt-28">
-        {/* Video Background */}
-        <div className="absolute inset-0 w-full h-full overflow-hidden">
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="absolute min-w-full min-h-full object-cover"
-            style={{ filter: 'brightness(0.7)' }}
-          >
-            <source src={backgroundVideo} type="video/mp4" />
-          </video>
-          <div className="absolute inset-0 bg-gradient-to-br from-primary-800/50 via-primary-900/50 to-secondary-900/50"></div>
-        </div>
+        {/* Animated Background */}
+        <AnimatedBackground />
 
         {/* Content */}
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 z-10">
