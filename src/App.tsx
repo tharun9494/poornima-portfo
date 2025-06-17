@@ -36,7 +36,7 @@ function App() {
           element={
             <Layout>
               <div className="flex flex-col">
-                <section id="home" className="min-h-screen py-20">
+                <section id="home" className="min-h-screen py-1">
                   <Home />
                 </section>
                 <section id="about" className="min-h-screen py-20 bg-gray-50">

@@ -1,6 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+body {
+  margin: 0; /* Ensure no default body margin */
+  padding: 0; /* Ensure no default body padding */
+  font-family: 'Your Preferred Font', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f7f7f7; /* Example background */
+}
+
+#root {
+  margin: 0; /* Ensure no default root margin */
+  padding: 0; /* Ensure no default root padding */
+}
+
 
 @layer base {
   :root {
