@@ -38,7 +38,7 @@ export default function Home() {
         // Query Firestore for the next webinar, ordered by date and limiting to 1
         const q = query(
           collection(db, 'webinars'),
-          orderBy('date', 'asc'), // Assumes 'date' field is a string in YYYY-MM-DD format or similar sortable string
+          orderBy('date', 'asc'), // Assumes 'date' field is a string inYYYY-MM-DD format or similar sortable string
           limit(1)
         );
         const snapshot = await getDocs(q);
@@ -91,7 +91,7 @@ export default function Home() {
           <div className="flex flex-col lg:flex-row items-center justify-between gap-8 sm:gap-10 lg:gap-12">
             {/* Left side: Text content and action buttons */}
             <motion.div
-              className="w-full lg:w-[45%] text-center lg:text-left" // MODIFIED: Adjusted width to 45% for text
+              className="w-full lg:w-[40%] text-center lg:text-left lg:mr-8" // MODIFIED: Adjusted width to 40% and added right margin
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 1 }}
@@ -139,7 +139,7 @@ export default function Home() {
 
             {/* Right side: Hero image with a subtle animated gradient behind it */}
             <motion.div
-              className="w-full lg:w-[55%] mt-8 lg:mt-0" // MODIFIED: Adjusted width to 55% for image
+              className="w-full lg:w-[60%] mt-8 lg:mt-0 lg:ml-8" // MODIFIED: Adjusted width to 60% and added left margin
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.4, duration: 0.8 }}
@@ -161,7 +161,7 @@ export default function Home() {
                 <motion.img
                   src={poornimaImageSrc} // Using the imported image source
                   alt="Hero"
-                  className="relative rounded-2xl shadow-2xl w-full h-[450px] object-cover" // MODIFIED: Changed h-96 to h-[450px] for more height
+                  className="relative rounded-2xl shadow-2xl w-[900px] h-[700px] object-cover" // MODIFIED: Changed h-[450px] to h-[500px] for more height
                   whileHover={{ scale: 1.02 }}
                   transition={{ duration: 0.3 }}
                 />
