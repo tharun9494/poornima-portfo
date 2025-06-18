@@ -147,7 +147,7 @@ function WhatIDo() {
                   {service.icon}
                 </motion.div>
                 <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-3 sm:mb-4">{service.title}</h2>
-                <p className="text-gray-600 leading-relaxed text-sm sm:text-base">
+                <p className="text-gray-600 leading-relaxed text-base">
                   {service.description}
                 </p>
               </div>
@@ -172,7 +172,7 @@ function WhatIDo() {
                 </div>
                 <h2 className="text-xl sm:text-2xl font-bold text-primary-800">{workshops.title}</h2>
               </div>
-              <p className="text-gray-600 leading-relaxed mb-4 sm:mb-6 text-sm sm:text-base">
+              <p className="text-gray-600 leading-relaxed mb-4 sm:mb-6 text-base">
                 {workshops.description}
               </p>
               <p className="text-primary-600 font-semibold flex items-center gap-2 text-sm sm:text-base">
@@ -190,7 +190,7 @@ function WhatIDo() {
                 </div>
                 <h2 className="text-xl sm:text-2xl font-bold text-primary-800">{freebies.title}</h2>
               </div>
-              <p className="text-gray-600 leading-relaxed text-sm sm:text-base">
+              <p className="text-gray-600 leading-relaxed text-base">
                 {freebies.description}
               </p>
             </div>
@@ -205,7 +205,7 @@ function WhatIDo() {
                 </div>
                 <h2 className="text-xl sm:text-2xl font-bold text-primary-800">{stepIntoTraining.title}</h2>
               </div>
-              <p className="text-gray-600 leading-relaxed mb-4 sm:mb-6 text-sm sm:text-base">
+              <p className="text-gray-600 leading-relaxed mb-4 sm:mb-6 text-base">
                 {stepIntoTraining.description}
               </p>
               <ul className="space-y-2">

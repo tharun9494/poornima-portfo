@@ -18,6 +18,9 @@ import Login from './pages/Login';
 import Events from './pages/Events';
 import Companies from './pages/Companies';
 import Colleges from './pages/Colleges';
+import StudentCommunity from './pages/StudentCommunity';
+import Ainxtgen from './pages/Ainxtgen';
+import QueenflluenceHub from './pages/QueenflluenceHub';
 
 function App() {
   return (
@@ -73,6 +76,15 @@ function App() {
                 </section>
                 <section id="community" className="min-h-screen py-20 bg-gray-50">
                   <Community />
+                </section>
+                <section id="student-community" className="min-h-screen py-20">
+                  <StudentCommunity />
+                </section>
+                <section id="ainxtgen" className="min-h-screen py-20 bg-gray-50">
+                  <Ainxtgen />
+                </section>
+                <section id="queenflluence-hub" className="min-h-screen py-20">
+                  <QueenflluenceHub />
                 </section>
                 <section id="gallery" className="min-h-screen py-20">
                   <Gallery />

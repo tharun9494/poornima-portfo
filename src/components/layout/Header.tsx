@@ -91,20 +91,23 @@ const Header: React.FC = () => {
         { id: 'circle', label: 'Circle' },
         { id: 'events', label: 'Events' },
         { id: 'webinars', label: 'Webinars' },
-        { id: 'community', label: 'Community' },
         { id: 'gallery', label: 'Gallery' },
         { id: 'testimonials', label: 'Testimonials' },
+        { id: 'community', label: 'Community' },
+        { id: 'student-community', label: 'Student Community' },
+        { id: 'ainxtgen', label: 'Ainxtgen' },
+        { id: 'queenflluence-hub', label: 'Queenflluence Hub' },
         { 
           id: 'companies', 
           label: 'Our Companies', 
           onClick: () => navigate('/companies'),
-          icon: <Building2 size={16} />
+          
         },
         { 
           id: 'colleges', 
           label: 'Our Colleges', 
           onClick: () => navigate('/colleges'),
-          icon: <GraduationCap size={16} />
+        
         }
       ]
     },
@@ -194,14 +197,14 @@ const Header: React.FC = () => {
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             exit={{ opacity: 0, y: 10, scale: 0.95 }}
                             transition={{ duration: 0.2 }}
-                            className="absolute left-0 mt-2 w-48 bg-white/95 backdrop-blur-md rounded-lg shadow-xl py-2 border border-gray-100"
+                            className="absolute left-0 mt-2 w-64 bg-white/95 backdrop-blur-md rounded-lg shadow-xl py-3 border border-gray-100"
                           >
                             {item.subItems.map((subItem) => (
                               <motion.button
                                 key={subItem.id}
-                                whileHover={{ x: 5, backgroundColor: 'rgba(175, 82, 222, 0.1)' }}
+                                whileHover={{ x: 5 }}
                                 onClick={subItem.onClick || (() => scrollToSection(subItem.id))}
-                                className="flex items-center gap-2 w-full text-left px-4 py-2 text-sm text-gray-700 hover:text-primary-600 transition-colors"
+                                className="flex items-center gap-3 w-full text-left px-4 py-3 text-sm text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors border-b border-gray-50 last:border-b-0"
                               >
                                 {subItem.icon}
                                 {subItem.label}
@@ -294,7 +297,7 @@ const Header: React.FC = () => {
                                     key={subItem.id}
                                     whileHover={{ x: 5 }}
                                     onClick={subItem.onClick || (() => scrollToSection(subItem.id))}
-                                    className="flex items-center gap-2 w-full text-left px-4 py-2 text-sm text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors"
+                                    className="flex items-center gap-3 w-full text-left px-4 py-3 text-sm text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors border-b border-gray-50 last:border-b-0"
                                   >
                                     {subItem.icon}
                                     {subItem.label}

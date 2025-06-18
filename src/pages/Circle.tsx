@@ -109,6 +109,7 @@ function Circle() {
 
         {/* Team Section */}
         <TeamSection />
+
       </div>
     </div>
   );

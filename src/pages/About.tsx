@@ -102,7 +102,14 @@ export default function About() {
                   title: 'Queenflluence Hub',
                   description: 'Empowering women entrepreneurs to build their businesses and personal brands.',
                   icon: '👑'
-                }
+                },
+                {
+                  title: 'Student Community',
+                  description: 'A vibrant community of students, mentors, and professionals building successful careers together.',
+                  icon: '🎯'
+                },
+                
+
               ].map((community, index) => (
                 <motion.div
                   key={index}
