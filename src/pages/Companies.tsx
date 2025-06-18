@@ -32,10 +32,7 @@ function Companies() {
       url: "https://media.licdn.com/dms/image/v2/C4D0BAQEsHtdCtiZ_Sw/company-logo_200_200/company-logo_200_200/0/1654665614322/techshiksha_logo?e=1753920000&v=beta&t=jvar5_Y92-tCqMGUjkHzwM1MoNnsJs3wsHAm8_xIf0o",
       name: "TechShiksha"
     },
-    {
-      url: "https://media.licdn.com/dms/image/v2/C560BAQGH6G3xURLh8Q/company-logo_200_200/company-logo_200_200/0/1658482708392/elewayte_an_online_training_company_logo?e=1753920000&v=beta&t=-cMIfbEM33W7902QtPttRi0mQey6xzXc44PMiU1JN2k",
-      name: "Elewayte"
-    },
+    
     {
       url: "https://media.licdn.com/dms/image/v2/D4E0BAQFgSB01EswgoQ/company-logo_200_200/company-logo_200_200/0/1722804523899/novuspark_logo?e=1754524800&v=beta&t=z66hRsnQCe-BPGy0LrNvI3mikaYh6JtNrrCIXdIX8hg",
       name: "Novuspark"
