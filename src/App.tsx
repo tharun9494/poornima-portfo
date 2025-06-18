@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import Layout from './components/layout/Layout';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute';
-import ReviewSection from './components/ReviewSection';
 
 // Pages
 import Home from './pages/Home';
@@ -17,6 +16,8 @@ import Contact from './pages/Contact';
 import AdminDashboard from './pages/AdminDashboard';
 import Login from './pages/Login';
 import Events from './pages/Events';
+import Companies from './pages/Companies';
+import Colleges from './pages/Colleges';
 
 function App() {
   return (
@@ -29,6 +30,22 @@ function App() {
             <ProtectedRoute>
               <AdminDashboard />
             </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/companies"
+          element={
+            <Layout>
+              <Companies />
+            </Layout>
+          }
+        />
+        <Route
+          path="/colleges"
+          element={
+            <Layout>
+              <Colleges />
+            </Layout>
           }
         />
         <Route

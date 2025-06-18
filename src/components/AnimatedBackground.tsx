@@ -7,9 +7,9 @@ const AnimatedBackground: React.FC = () => {
 
   return (
     <div className="absolute inset-0 w-full h-full overflow-hidden">
-      {/* Subtle animated gradient background - provides the base white/light gray */}
+      {/* Subtle animated gradient background - now includes light green */}
       <motion.div
-        className="absolute inset-0 bg-gradient-to-br from-white via-gray-50 to-white"
+        className="absolute inset-0 bg-gradient-to-br from-white via-green-50 to-emerald-50"
         animate={{
           backgroundPosition: ['0% 0%', '100% 100%'],
         }}
@@ -23,11 +23,11 @@ const AnimatedBackground: React.FC = () => {
         }}
       />
 
-      {/* Animated subtle circles (larger, very transparent elements) */}
+      {/* Animated subtle circles (larger, very transparent elements) - now with light green */}
       {[...Array(5)].map((_, i) => (
         <motion.div
           key={`subtle-circle-${i}`} // Unique key for this set of circles
-          className="absolute rounded-full bg-gray-100/30" // Light gray with more transparency
+          className="absolute rounded-full bg-green-100/30" // Light green with transparency
           style={{
             width: `${Math.random() * 300 + 100}px`,
             height: `${Math.random() * 300 + 100}px`,
@@ -48,7 +48,7 @@ const AnimatedBackground: React.FC = () => {
         />
       ))}
 
-      {/* Floating Bubble Animation (more prominent, colored, and thicker) */}
+      {/* Floating Bubble Animation (now includes light green bubbles) */}
       {[...Array(numberOfBubbles)].map((_, i) => {
         const size = Math.random() * 60 + 30; // Increased size range (30px to 90px)
         const startX = Math.random() * 100; // Starting X position (0-100vw)
@@ -57,9 +57,11 @@ const AnimatedBackground: React.FC = () => {
         const driftAmountX = (Math.random() - 0.5) * 120; // Horizontal drift (-60vw to 60vw)
         const floatAmountY = Math.random() * 60 + 60; // Vertical float distance (60vh to 120vh)
 
-        // Alternate between light yellow and light blue colors, with moderate transparency
-        const bubbleColorClass =
-          i % 2 === 0 ? 'bg-yellow-300/60' : 'bg-blue-300/60';
+        // Now includes light green as one of the three colors
+        const bubbleColorClass = 
+          i % 3 === 0 ? 'bg-yellow-300/60' : 
+          i % 3 === 1 ? 'bg-blue-300/60' : 
+          'bg-green-300/60'; // Light green bubbles
 
         return (
           <motion.div
@@ -89,8 +91,8 @@ const AnimatedBackground: React.FC = () => {
         );
       })}
 
-      {/* Subtle white overlay (unchanged) - helps to unify the background elements */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/50 via-gray-50/50 to-white/50" />
+      {/* Subtle overlay - now with light green tint */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/50 via-green-50/50 to-emerald-50/50" />
     </div>
   );
 };

@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import LoginModal from '../auth/LoginModal';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { FileText, Image, MessageSquare, Users, Settings } from 'lucide-react';
+import { FileText, Image, MessageSquare, Users, Settings, Building2, GraduationCap } from 'lucide-react';
 import logo from '../../pages/images/logo.png'
 
 interface SubItem {
@@ -42,12 +42,25 @@ const Header: React.FC = () => {
   }, []);
 
   const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setIsMobileMenuOpen(false);
-      setActiveDropdown(null);
+    // If we're on a separate page (not the main page), navigate to the main page first
+    if (location.pathname !== '/') {
+      navigate('/');
+      // Wait a bit for navigation to complete, then scroll to section
+      setTimeout(() => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      // We're on the main page, just scroll to section
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
     }
+    setIsMobileMenuOpen(false);
+    setActiveDropdown(null);
   };
 
   const handleLoginClick = () => {
@@ -80,7 +93,19 @@ const Header: React.FC = () => {
         { id: 'webinars', label: 'Webinars' },
         { id: 'community', label: 'Community' },
         { id: 'gallery', label: 'Gallery' },
-        { id: 'testimonials', label: 'Testimonials' }
+        { id: 'testimonials', label: 'Testimonials' },
+        { 
+          id: 'companies', 
+          label: 'Our Companies', 
+          onClick: () => navigate('/companies'),
+          icon: <Building2 size={16} />
+        },
+        { 
+          id: 'colleges', 
+          label: 'Our Colleges', 
+          onClick: () => navigate('/colleges'),
+          icon: <GraduationCap size={16} />
+        }
       ]
     },
     { id: 'contact', label: 'Contact' },
@@ -124,7 +149,13 @@ const Header: React.FC = () => {
               animate={{ opacity: 1, x: 0 }}
               whileHover={{ scale: 1.05 }}
               className="flex items-center gap-2 cursor-pointer"
-              onClick={() => scrollToSection('home')}
+              onClick={() => {
+                if (location.pathname !== '/') {
+                  navigate('/');
+                } else {
+                  scrollToSection('home');
+                }
+              }}
             >
               <img 
                 src={logo} 

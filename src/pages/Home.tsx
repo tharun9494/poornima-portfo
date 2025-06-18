@@ -1,6 +1,7 @@
 // src/pages/Home.tsx
 import { motion, useScroll, useTransform } from 'framer-motion';
 import poornima from './images/poornima.png'; // Corrected import path for poornima.png
+import image from './images/image.png'; // Added import for background image
 import { useState, useEffect } from 'react';
 import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 import { db } from '../firebase/config'; // Assuming your Firebase config is here
@@ -81,6 +82,18 @@ export default function Home() {
         className="relative min-h-screen flex items-center justify-center overflow-hidden
                    pt-8 sm:pt-10 md:pt-12 lg:pt-16" // Adjusted top padding to reduce space below navigation
       >
+        {/* Background Image */}
+        <div 
+          className="absolute inset-0 w-full h-full"
+          style={{
+            backgroundImage: `url(${image})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            opacity: 0.1 // Very subtle background
+          }}
+        />
+
         {/* Animated Background Component - Provides the subtle white gradient and floating bubbles */}
         {/* Placed first (at the bottom of the section) to ensure content sits on top of it */}
         <AnimatedBackground />
@@ -267,35 +280,80 @@ export default function Home() {
       </section>
 
       {/* Featured Testimonial Section */}
-      <section className="py-10 bg-gray-50">
+      <section className="py-16 bg-gradient-to-br from-gray-50 to-blue-50">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto bg-white p-8 md:p-12 rounded-lg shadow-lg relative">
-            <div className="text-6xl text-gray-300 absolute top-4 left-4">"</div>
-            <div className="relative z-10">
-              <p className="text-lg md:text-xl text-gray-700 mb-6 italic">
-                The mentorship program completely transformed my approach to personal branding.
-                I've gained the confidence and skills to establish my digital presence,
-                which has opened up numerous opportunities for my small business.
-              </p>
+          <div className="max-w-7xl mx-auto">
+            {/* Section Header */}
+            
 
-              <div className="flex items-center">
-                <img
-                  src="https://media.licdn.com/dms/image/v2/D5622AQFaO2OK7ELiLg/feedshare-shrink_1280/feedshare-shrink_1280/0/1723695862368?e=1750896000&v=beta&t=4hzEPUUMZHwJC3o576LE7qGNa9rJhEydECdrqSySBHA"
-                  alt="Poornimma S"
-                  className="w-12 h-12 rounded-full object-cover mr-4"
-                />
-                <div>
-                  <h4 className="font-semibold text-gray-800">Poornimma S</h4>
-                  <p className="text-sm text-gray-500">Queenflluence Hub</p>
+            {/* Main Content */}
+            <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+              {/* Testimonial Content */}
+              <div className="w-full lg:w-3/5">
+                <div className="bg-white p-8 md:p-10 rounded-2xl shadow-xl relative border border-gray-100">
+                  {/* Quote Icon */}
+                  <div className="absolute -top-4 -left-4 w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
+                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+                    </svg>
+                  </div>
+
+                  <div className="relative z-10">
+                    <p className="text-lg md:text-xl text-gray-700 mb-8 italic leading-relaxed">
+                      "The mentorship program completely transformed my approach to personal branding.
+                      I've gained the confidence and skills to establish my digital presence,
+                      which has opened up numerous opportunities for my small business."
+                    </p>
+
+                    <div className="flex items-center">
+                      <div className="w-16 h-16 rounded-full overflow-hidden mr-4 border-4 border-blue-100">
+                        <img
+                          src="https://media.licdn.com/dms/image/v2/D5622AQFaO2OK7ELiLg/feedshare-shrink_1280/feedshare-shrink_1280/0/1723695862368?e=1750896000&v=beta&t=4hzEPUUMZHwJC3o576LE7qGNa9rJhEydECdrqSySBHA"
+                          alt="Poornimma S"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-gray-800 text-lg">Poornimma S</h4>
+                        <p className="text-blue-600 font-medium">Queenflluence Hub</p>
+                        <div className="flex items-center mt-1">
+                         
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+
+                
+              </div>
+
+              {/* Image Section */}
+              <div className="w-full lg:w-2/5">
+                <motion.div
+                  className="relative flex justify-center"
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                >
+                  <div className="relative">
+                    {/* Decorative elements */}
+                    <div className="absolute -top-4 -right-4 w-24 h-24 bg-yellow-400 rounded-full opacity-20 blur-xl"></div>
+                    <div className="absolute -bottom-4 -left-4 w-20 h-20 bg-blue-400 rounded-full opacity-20 blur-xl"></div>
+                    
+                    {/* Main image container */}
+                    <div className="relative bg-gradient-to-br from-blue-600/10 to-purple-600/10 rounded-3xl p-4">
+                      <motion.img
+                        src={image}
+                        alt="Success Story"
+                        className="relative rounded-2xl shadow-2xl w-full h-80 object-cover"
+                        whileHover={{ scale: 1.05, rotate: 1 }}
+                        transition={{ duration: 0.3 }}
+                      />
+                    </div>
+                  </div>
+                </motion.div>
               </div>
             </div>
-          </div>
-
-          <div className="text-center mt-10">
-            <button onClick={() => scrollToSection('testimonials')} className="px-6 sm:px-8 py-3 bg-white text-blue-600 rounded-full font-medium border border-blue-600 hover:bg-blue-50 transition-all duration-300">
-              Read More Testimonials
-            </button>
           </div>
         </div>
       </section>
