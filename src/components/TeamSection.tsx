@@ -83,11 +83,6 @@ function TeamSection() {
       viewport={{ once: true, margin: "-100px" }}
       className="mt-20"
     >
-      <div className="flex items-center justify-center gap-3 mb-10">
-        <Users className="w-8 h-8 text-blue-600" />
-        <h2 className="text-3xl font-semibold text-gray-800">Our Team</h2>
-      </div>
-      
       <div className="relative">
         <div className="overflow-x-auto pb-6 hide-scrollbar">
           <div className="flex gap-4 px-4 min-w-max">
