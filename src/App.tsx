@@ -21,6 +21,9 @@ import Colleges from './pages/Colleges';
 import StudentCommunity from './pages/StudentCommunity';
 import Ainxtgen from './pages/Ainxtgen';
 import QueenflluenceHub from './pages/QueenflluenceHub';
+import Memberships from './pages/Memberships';
+import Path from './pages/Path';
+import SuccessStories from './pages/SuccessStories';
 
 function App() {
   return (
@@ -48,6 +51,30 @@ function App() {
           element={
             <Layout>
               <Colleges />
+            </Layout>
+          }
+        />
+        <Route
+          path="/memberships"
+          element={
+            <Layout>
+              <Memberships />
+            </Layout>
+          }
+        />
+        <Route
+          path="/path"
+          element={
+            <Layout>
+              <Path />
+            </Layout>
+          }
+        />
+        <Route
+          path="/success-stories"
+          element={
+            <Layout>
+              <SuccessStories />
             </Layout>
           }
         />

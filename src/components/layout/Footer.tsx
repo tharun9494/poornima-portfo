@@ -1,6 +1,6 @@
 import { Facebook, Instagram, Linkedin, Twitter, Youtube, MessageSquare } from 'lucide-react';
 import { motion } from 'framer-motion';
-import logo1 from '../../pages/images/logo1.png';
+import logo from '../../pages/images/logo.png';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -19,7 +19,7 @@ export default function Footer() {
           {/* Logo and Description */}
           <div className="md:col-span-2">
             <div className="flex items-center mb-6">
-              <img src={logo1} alt="Logo" className="h-24 w-auto" />
+              <img src={logo} alt="Logo" className="h-24 w-auto" />
             </div>
             <p className="text-gray-300 text-sm mb-4">
             Empowering students, women, and aspiring trainers to build their personal brand and digital visibility footer

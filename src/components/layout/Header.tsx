@@ -82,36 +82,33 @@ const Header: React.FC = () => {
   };
 
   const navItems: NavItem[] = [
-    { id: 'home', label: 'Home' },
-    { id: 'about', label: 'About' },
     {
       id: 'what-i-do',
-      label: 'What I Do',
+      label: 'Services',
       subItems: [
-        { id: 'circle', label: 'Circle' },
         { id: 'events', label: 'Events' },
         { id: 'webinars', label: 'Webinars' },
-        { id: 'gallery', label: 'Gallery' },
-        { id: 'testimonials', label: 'Testimonials' },
         { id: 'community', label: 'Community' },
         { id: 'student-community', label: 'Student Community' },
-        { id: 'ainxtgen', label: 'Ainxtgen' },
-        { id: 'queenflluence-hub', label: 'Queenflluence Hub' },
-        { 
-          id: 'companies', 
-          label: 'Our Companies', 
-          onClick: () => navigate('/companies'),
-          
-        },
-        { 
-          id: 'colleges', 
-          label: 'Our Colleges', 
-          onClick: () => navigate('/colleges'),
-        
-        }
+        { id: 'gallery', label: 'Gallery' },
+        { id: 'testimonials', label: 'Testimonials' }
       ]
     },
-    { id: 'contact', label: 'Contact' },
+    { 
+      id: 'memberships', 
+      label: 'Memberships', 
+      onClick: () => navigate('/memberships')
+    },
+    { 
+      id: 'path', 
+      label: 'Path', 
+      onClick: () => navigate('/path')
+    },
+    { 
+      id: 'success-stories', 
+      label: 'Success Stories', 
+      onClick: () => navigate('/success-stories')
+    },
     ...(currentUser ? [
       { 
         id: 'admin', 
@@ -136,22 +133,18 @@ const Header: React.FC = () => {
   return (
     <>
       <motion.header 
-        className={`fixed w-full z-50 transition-all duration-300 py-2 ${
-          isScrolled 
-            ? 'bg-white/95 backdrop-blur-md shadow-lg' 
-            : 'bg-transparent'
-        }`}
+        className="fixed w-full z-50 bg-white shadow-lg border-b border-gray-200/50 transition-all duration-300"
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
       >
-        <nav className="container mx-auto px-4">
-          <div className="flex justify-between items-center">
+        <nav className="container mx-auto px-6">
+          <div className="flex justify-between items-center py-4">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              whileHover={{ scale: 1.05 }}
-              className="flex items-center gap-2 cursor-pointer"
+              whileHover={{ scale: 1.02 }}
+              className="flex items-center cursor-pointer"
               onClick={() => {
                 if (location.pathname !== '/') {
                   navigate('/');
@@ -163,31 +156,29 @@ const Header: React.FC = () => {
               <img 
                 src={logo} 
                 alt="Logo" 
-                className="h-16 w-auto object-contain"
-                style={{ maxHeight: '64px' }}
+                className="h-20 w-auto object-contain"
               />
             </motion.div>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
+            <div className="hidden lg:flex items-center">
               {navItems.map((item) => (
-                <div key={item.id} className="relative group">
+                <div key={item.id} className="relative">
                   {item.subItems ? (
                     <div
                       onMouseEnter={() => setActiveDropdown(item.id)}
                       onMouseLeave={() => setActiveDropdown(null)}
                     >
                       <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className={`text-sm font-medium transition-colors flex items-center gap-2 ${
-                          isScrolled 
-                            ? 'text-gray-800 hover:text-primary-600' 
-                            : 'text-gray-800 hover:text-primary-600'
-                        }`}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors duration-200 flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100"
                       >
                         {item.icon}
                         {item.label}
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
                       </motion.button>
                       
                       <AnimatePresence>
@@ -197,14 +188,14 @@ const Header: React.FC = () => {
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             exit={{ opacity: 0, y: 10, scale: 0.95 }}
                             transition={{ duration: 0.2 }}
-                            className="absolute left-0 mt-2 w-64 bg-white/95 backdrop-blur-md rounded-lg shadow-xl py-3 border border-gray-100"
+                            className="absolute left-0 mt-2 w-64 bg-white rounded-xl shadow-xl py-3 border border-gray-100"
                           >
                             {item.subItems.map((subItem) => (
                               <motion.button
                                 key={subItem.id}
                                 whileHover={{ x: 5 }}
                                 onClick={subItem.onClick || (() => scrollToSection(subItem.id))}
-                                className="flex items-center gap-3 w-full text-left px-4 py-3 text-sm text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors border-b border-gray-50 last:border-b-0"
+                                className="flex items-center gap-3 w-full text-left px-4 py-3 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-colors duration-200 rounded-lg mx-2"
                               >
                                 {subItem.icon}
                                 {subItem.label}
@@ -216,15 +207,13 @@ const Header: React.FC = () => {
                     </div>
                   ) : (
                     <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                       onClick={item.onClick || (() => scrollToSection(item.id))}
-                      className={`text-sm font-medium transition-all duration-300 ${
+                      className={`text-sm font-medium transition-colors duration-200 ${
                         item.isButton 
-                          ? `${item.className} text-white px-4 py-2 rounded-full flex items-center gap-2 shadow-lg hover:shadow-xl`
-                          : isScrolled 
-                            ? 'text-gray-800 hover:text-primary-600' 
-                            : 'text-gray-800 hover:text-primary-600'
+                          ? `${item.className} text-white px-6 py-2 rounded-full flex items-center gap-2 shadow-lg hover:shadow-xl ml-4`
+                          : `text-gray-700 hover:text-blue-600 px-4 py-2 rounded-lg hover:bg-gray-100`
                       }`}
                     >
                       {item.icon}
@@ -235,14 +224,14 @@ const Header: React.FC = () => {
               ))}
             </div>
 
-            {/* Mobile Menu Button */}
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden text-gray-600 hover:text-gray-900 focus:outline-none"
-              aria-label="Toggle menu"
-            >
+                {/* Mobile Menu Button */}
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  className="lg:hidden p-2 text-gray-600 hover:text-blue-600 hover:bg-gray-100 rounded-lg transition-colors duration-200 focus:outline-none"
+                  aria-label="Toggle menu"
+                >
               <svg
                 className="h-6 w-6"
                 fill="none"
@@ -269,7 +258,7 @@ const Header: React.FC = () => {
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.3 }}
-                className="md:hidden mt-2 bg-white/95 backdrop-blur-md rounded-xl shadow-xl overflow-hidden border border-gray-100"
+                className="lg:hidden mt-2 bg-white rounded-xl shadow-xl overflow-hidden border border-gray-100"
               >
                 <div className="px-3 py-2 space-y-1">
                   {navItems.map((item) => (

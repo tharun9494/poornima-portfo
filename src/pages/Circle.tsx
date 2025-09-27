@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Building2, GraduationCap } from 'lucide-react';
-import TeamSection from '../components/TeamSection';
 
 function Circle() {
   const containerVariants = {
@@ -106,9 +105,6 @@ function Circle() {
             </motion.div>
           </div>
         </motion.div>
-
-        {/* Team Section */}
-        <TeamSection />
 
       </div>
     </div>

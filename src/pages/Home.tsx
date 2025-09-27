@@ -6,6 +6,9 @@ import { useState, useEffect } from 'react';
 import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 import { db } from '../firebase/config'; // Assuming your Firebase config is here
 import AnimatedBackground from '../components/AnimatedBackground'; // Path to your AnimatedBackground component
+import AnimatedCounter from '../components/AnimatedCounter';
+import FloatingImage from '../components/FloatingImage';
+import { ArrowRight, Star, Users, TrendingUp, Award, Zap, Target, CheckCircle } from 'lucide-react';
 
 interface Webinar {
   id: string;
@@ -79,7 +82,7 @@ export default function Home() {
     <>
       {/* Hero Section - The main welcoming section of the page */}
       <section
-        className="relative min-h-screen flex items-center justify-center overflow-hidden
+        className="relative min-h-screen flex items-center justify-center overflow-hidden bg-white
                    pt-8 sm:pt-10 md:pt-12 lg:pt-16" // Adjusted top padding to reduce space below navigation
       >
         {/* Background Image */}
@@ -90,7 +93,7 @@ export default function Home() {
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
-            opacity: 0.1 // Very subtle background
+            opacity: 0.05 // Very subtle background
           }}
         />
 
