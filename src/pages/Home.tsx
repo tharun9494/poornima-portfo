@@ -9,6 +9,7 @@ import AnimatedBackground from '../components/AnimatedBackground'; // Path to yo
 import AnimatedCounter from '../components/AnimatedCounter';
 import FloatingImage from '../components/FloatingImage';
 import { ArrowRight, Star, Users, TrendingUp, Award, Zap, Target, CheckCircle } from 'lucide-react';
+import logo from '../pages/images/logo.png'
 
 interface Webinar {
   id: string;
@@ -311,14 +312,14 @@ export default function Home() {
                     <div className="flex items-center">
                       <div className="w-16 h-16 rounded-full overflow-hidden mr-4 border-4 border-blue-100">
                         <img
-                          src="https://media.licdn.com/dms/image/v2/D5622AQFaO2OK7ELiLg/feedshare-shrink_1280/feedshare-shrink_1280/0/1723695862368?e=1750896000&v=beta&t=4hzEPUUMZHwJC3o576LE7qGNa9rJhEydECdrqSySBHA"
+                          src={logo}
                           alt="Poornimma S"
                           className="w-full h-full object-cover"
                         />
                       </div>
                       <div>
                         <h4 className="font-bold text-gray-800 text-lg">Poornimma S</h4>
-                        <p className="text-blue-600 font-medium">Queenflluence Hub</p>
+                        <p className="text-blue-600 font-medium">AFH</p>
                         <div className="flex items-center mt-1">
                          
                         </div>

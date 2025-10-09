@@ -74,58 +74,6 @@ export default function About() {
         </div>
       </section>
 
-      {/* Communities Section */}
-      <section className="py-20 bg-gradient-to-br from-primary-50 to-secondary-50">
-        <div className="container mx-auto px-4">
-          <motion.div
-            variants={staggerContainer}
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-            className="max-w-4xl mx-auto"
-          >
-            <motion.h2
-              variants={fadeInUp}
-              className="text-3xl md:text-4xl font-bold text-primary-800 mb-12 text-center"
-            >
-              My Communities
-            </motion.h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {[
-                {
-                  title: 'Ainxtgen',
-                  description: 'A supportive community for students to learn, grow, and build their future together.',
-                  icon: '🎓'
-                },
-                {
-                  title: 'Queenflluence Hub',
-                  description: 'Empowering women entrepreneurs to build their businesses and personal brands.',
-                  icon: '👑'
-                },
-                {
-                  title: 'Student Community',
-                  description: 'A vibrant community of students, mentors, and professionals building successful careers together.',
-                  icon: '🎯'
-                },
-                
-
-              ].map((community, index) => (
-                <motion.div
-                  key={index}
-                  variants={fadeInUp}
-                  whileHover={{ scale: 1.02 }}
-                  className="bg-white rounded-xl p-8 shadow-lg"
-                >
-                  <div className="text-5xl mb-4">{community.icon}</div>
-                  <h3 className="text-2xl font-semibold text-primary-700 mb-3">{community.title}</h3>
-                  <p className="text-gray-600">{community.description}</p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
 
       {/* Call to Action */}
       <section className="py-20 bg-gradient-to-r from-primary-600 to-secondary-600 text-white">
