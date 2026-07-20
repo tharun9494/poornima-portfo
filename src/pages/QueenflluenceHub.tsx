@@ -2,11 +2,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { 
   Users, 
-  GraduationCap, 
-  BookOpen, 
-  Calendar, 
-  Globe,
-  Star,
   Award,
   Target,
   Heart,
@@ -20,7 +15,7 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.2
+      staggerChildren: 0.15
     }
   }
 };
@@ -38,26 +33,33 @@ const itemVariants = {
 };
 
 function QueenflluenceHub() {
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   const programs = [
     {
       id: 1,
       title: "Women Leadership Program",
-      icon: <Crown className="w-8 h-8 text-pink-600" />,
-      description: "Empower yourself with leadership skills and confidence to break barriers and achieve your dreams.",
+      icon: <Crown className="w-6 h-6 text-accent-600" />,
+      description: "Empower yourself with leadership skills and confidence to break barriers and achieve your goals.",
       features: ["Leadership Skills", "Confidence Building", "Public Speaking", "Decision Making"]
     },
     {
       id: 2,
       title: "Business & Entrepreneurship",
-      icon: <Sparkles className="w-8 h-8 text-pink-600" />,
-      description: "Start and grow your own business with our comprehensive entrepreneurship training.",
+      icon: <Sparkles className="w-6 h-6 text-accent-600" />,
+      description: "Start and grow your own business with our comprehensive training and personal branding strategy.",
       features: ["Business Planning", "Marketing Strategies", "Financial Management", "Networking"]
     },
     {
       id: 3,
       title: "Personal Branding for Women",
-      icon: <Flower className="w-8 h-8 text-pink-600" />,
-      description: "Build a powerful personal brand that reflects your authentic self and professional goals.",
+      icon: <Flower className="w-6 h-6 text-accent-600" />,
+      description: "Build a powerful personal brand that reflects your authentic self and professional ambitions.",
       features: ["Brand Strategy", "Social Media Presence", "Content Creation", "Professional Image"]
     }
   ];
@@ -66,45 +68,47 @@ function QueenflluenceHub() {
     {
       id: 1,
       title: "Supportive Community",
-      icon: <Heart className="w-6 h-6 text-pink-500" />,
+      icon: <Heart className="w-5 h-5 text-accent-600" />,
       description: "Connect with like-minded women who support and inspire each other."
     },
     {
       id: 2,
       title: "Mentorship Programs",
-      icon: <Users className="w-6 h-6 text-pink-500" />,
+      icon: <Users className="w-5 h-5 text-primary-600" />,
       description: "Get guidance from successful women leaders and entrepreneurs."
     },
     {
       id: 3,
       title: "Skill Development",
-      icon: <Target className="w-6 h-6 text-pink-500" />,
+      icon: <Target className="w-5 h-5 text-primary-600" />,
       description: "Develop essential skills for personal and professional growth."
     },
     {
       id: 4,
       title: "Networking Opportunities",
-      icon: <Award className="w-6 h-6 text-pink-500" />,
+      icon: <Award className="w-5 h-5 text-accent-600" />,
       description: "Build valuable connections with women in various industries."
     }
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-16">
+    <div className="bg-[#faf9fe] py-16 md:py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Hero Section */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-12 md:mb-16"
+          className="text-center mb-16"
         >
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-pink-600 mb-6">
-            Queenflluence Hub
+          <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-accent-50 border border-accent-100 text-accent-600 text-xs font-bold tracking-wider rounded-full uppercase mb-4">
+            ★ Women Empowerment & Leadership
+          </span>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#0f0726] mb-4">
+            Queenflluence <span className="text-accent-600">Hub</span>
           </h1>
-          <p className="text-base text-gray-600 max-w-4xl mx-auto leading-relaxed">
-            Empowering women to become leaders, entrepreneurs, and influencers. Join our community 
-            of strong, ambitious women who are creating their own success stories.
+          <p className="text-gray-600 text-base max-w-2xl mx-auto font-medium">
+            Empowering women to become leaders, entrepreneurs, and influencers. Join our supportive network creating real success stories.
           </p>
         </motion.div>
 
@@ -114,22 +118,22 @@ function QueenflluenceHub() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="mb-16 md:mb-20"
+          className="mb-20"
         >
-          <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">Why Join Queenflluence Hub?</h2>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-center text-[#0f0726] mb-12">Why Join Queenflluence Hub?</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {benefits.map((benefit) => (
               <motion.div
                 key={benefit.id}
                 variants={itemVariants}
                 whileHover={{ y: -5 }}
-                className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100"
+                className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 transition-all duration-300 hover:shadow-md"
               >
-                <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-xl bg-accent-50 flex items-center justify-center mb-4">
                   {benefit.icon}
-                  <h3 className="text-lg font-semibold text-gray-800">{benefit.title}</h3>
                 </div>
-                <p className="text-gray-600 text-base">{benefit.description}</p>
+                <h3 className="text-base font-extrabold text-[#0f0726] mb-2">{benefit.title}</h3>
+                <p className="text-xs text-gray-500 font-medium leading-relaxed">{benefit.description}</p>
               </motion.div>
             ))}
           </div>
@@ -141,28 +145,28 @@ function QueenflluenceHub() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="mb-16 md:mb-20"
+          className="mb-20"
         >
-          <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">Our Programs</h2>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-center text-[#0f0726] mb-12">Our Specialized Programs</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {programs.map((program) => (
               <motion.div
                 key={program.id}
                 variants={itemVariants}
-                whileHover={{ y: -10 }}
-                className="bg-gradient-to-br from-pink-50 to-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-pink-100"
+                whileHover={{ y: -5 }}
+                className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 transition-all duration-300 hover:shadow-md flex flex-col justify-between"
               >
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="p-3 bg-pink-100 rounded-full">
+                <div>
+                  <div className="w-12 h-12 rounded-xl bg-accent-50 flex items-center justify-center mb-6">
                     {program.icon}
                   </div>
-                  <h3 className="text-xl font-bold text-gray-800">{program.title}</h3>
+                  <h3 className="text-xl font-bold text-[#0f0726] mb-3">{program.title}</h3>
+                  <p className="text-gray-600 text-sm font-medium leading-relaxed mb-6">{program.description}</p>
                 </div>
-                <p className="text-gray-600 mb-6 text-base">{program.description}</p>
-                <ul className="space-y-2">
+                <ul className="space-y-2 border-t border-gray-100 pt-4">
                   {program.features.map((feature, index) => (
-                    <li key={index} className="flex items-center gap-2 text-sm text-gray-700">
-                      <span className="text-pink-600">•</span>
+                    <li key={index} className="flex items-center gap-2 text-xs font-semibold text-gray-700">
+                      <span className="text-accent-600">•</span>
                       {feature}
                     </li>
                   ))}
@@ -180,22 +184,25 @@ function QueenflluenceHub() {
           viewport={{ once: true }}
           className="text-center"
         >
-          <div className="bg-gradient-to-r from-pink-600 to-purple-600 rounded-2xl p-12 text-white">
-            <h2 className="text-3xl font-bold mb-4">Ready to Empower Your Future?</h2>
-            <p className="text-xl mb-8 opacity-90">
-              Join our community of powerful women and start your journey to success.
+          <div className="bg-[#0f0726] rounded-3xl p-10 md:p-14 text-white shadow-xl">
+            <h2 className="text-2xl sm:text-3xl font-extrabold mb-4">Ready to Empower Your Future?</h2>
+            <p className="text-gray-300 text-base mb-8 max-w-xl mx-auto font-medium">
+              Join our community of powerful women and start your journey to success today.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
                 href="https://chat.whatsapp.com/Lc4Mdj4yuYMAiKQeD3cZPE"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-8 py-4 bg-white text-pink-600 rounded-full font-semibold hover:bg-gray-100 transition-colors shadow-lg hover:shadow-xl"
+                className="px-8 py-3.5 bg-accent-600 text-white rounded-lg font-semibold hover:bg-accent-700 transition-colors shadow-md text-sm"
               >
-                Join Women's Community
+                Join Women's Community on WhatsApp
               </a>
-              <button className="px-8 py-4 border-2 border-white text-white rounded-full font-semibold hover:bg-white hover:text-pink-600 transition-colors">
-                Learn More
+              <button 
+                onClick={() => scrollToSection('contact')}
+                className="px-8 py-3.5 border border-white/20 text-white rounded-lg font-semibold hover:bg-white/10 transition-colors text-sm"
+              >
+                Contact Us
               </button>
             </div>
           </div>
@@ -205,4 +212,4 @@ function QueenflluenceHub() {
   );
 }
 
-export default QueenflluenceHub; 
+export default QueenflluenceHub;

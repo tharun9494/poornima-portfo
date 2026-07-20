@@ -19,7 +19,6 @@ interface Webinar {
 const Webinars: React.FC = () => {
   const [webinars, setWebinars] = useState<Webinar[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedWebinar, setSelectedWebinar] = useState<Webinar | null>(null);
   const [expandedWebinar, setExpandedWebinar] = useState<string | null>(null);
 
   useEffect(() => {
@@ -41,8 +40,8 @@ const Webinars: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
+      <div className="py-20 flex items-center justify-center bg-[#faf9fe]">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
       </div>
     );
   }
@@ -73,24 +72,32 @@ const Webinars: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      <div className="container mx-auto px-4 py-12">
-        <motion.h1 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-4xl font-bold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-blue-600"
-        >
-          Upcoming Webinars
-        </motion.h1>
+    <div className="bg-[#faf9fe] py-16 md:py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-primary-50 border border-primary-200 text-primary-600 text-xs font-bold tracking-wider rounded-full uppercase mb-4">
+            ★ Live Sessions & Masterclasses
+          </span>
+          <motion.h1 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#0f0726]"
+          >
+            Masterclasses & <span className="text-primary-600">Webinars</span>
+          </motion.h1>
+          <p className="text-gray-600 text-base max-w-2xl mx-auto mt-4 font-medium">
+            Interactive virtual sessions designed to teach you practical AI skills and personal branding.
+          </p>
+        </div>
         
         {webinars.length === 0 ? (
           <motion.p 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-center text-gray-600 text-lg"
+            className="text-center text-gray-500 font-medium text-base py-12"
           >
-            No upcoming webinars at the moment.
+            No upcoming webinars at the moment. Stay tuned!
           </motion.p>
         ) : (
           <motion.div 
@@ -103,80 +110,87 @@ const Webinars: React.FC = () => {
               <motion.div
                 key={webinar.id}
                 variants={itemVariants}
-                whileHover={{ scale: 1.02 }}
-                className="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:shadow-xl"
+                whileHover={{ y: -5 }}
+                className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md flex flex-col justify-between"
               >
-                {webinar.imageUrl && (
-                  <div className="relative h-48 overflow-hidden">
-                    <img
-                      src={webinar.imageUrl}
-                      alt={webinar.title}
-                      className="w-full h-full object-cover transform transition-transform duration-500 hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                    <div className="absolute top-4 right-4 bg-primary-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                      <Video className="w-4 h-4 inline-block mr-1" />
-                      Webinar
-                    </div>
-                  </div>
-                )}
-                <div className="p-6">
-                  <h2 className="text-xl font-semibold text-gray-800 mb-3">{webinar.title}</h2>
-                  <div className="space-y-3 text-gray-600">
-                    <div className="flex items-center">
-                      <Calendar className="w-5 h-5 mr-2 text-primary-500" />
-                      <span>{new Date(webinar.date).toLocaleDateString('en-US', { 
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                      })}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Clock className="w-5 h-5 mr-2 text-primary-500" />
-                      <span>{webinar.time} • {webinar.duration}</span>
-                    </div>
-                  </div>
-                  <div className="mt-4">
-                    <div className="flex items-start">
-                      <BookOpen className="w-5 h-5 mr-2 text-primary-500 mt-1" />
-                      <div>
-                        <h3 className="text-sm font-normal text-gray-800 mb-1">Learning Outcomes:</h3>
-                        <p className={`text-gray-600 ${expandedWebinar === webinar.id ? '' : 'line-clamp-3'}`}>
-                          {webinar.learningOutcomes}
-                        </p>
+                <div>
+                  {webinar.imageUrl && (
+                    <div className="relative h-48 overflow-hidden">
+                      <img
+                        src={webinar.imageUrl}
+                        alt={webinar.title}
+                        className="w-full h-full object-cover transform transition-transform duration-500 hover:scale-105"
+                      />
+                      <div className="absolute top-4 right-4 bg-primary-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
+                        <Video className="w-3.5 h-3.5 inline-block mr-1" />
+                        Webinar
                       </div>
                     </div>
-                  </div>
-                  <p className={`mt-4 text-gray-600 ${expandedWebinar === webinar.id ? '' : 'line-clamp-3'}`}>
-                    {webinar.description}
-                  </p>
-                  <div className="mt-4 flex justify-between items-center">
-                    {webinar.formLink && (
-                      <motion.a
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        href={webinar.formLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center px-6 py-3 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors duration-300"
-                      >
-                        Register Now
-                        <ExternalLink className="w-4 h-4 ml-2" />
-                      </motion.a>
+                  )}
+                  <div className="p-6">
+                    <h2 className="text-xl font-extrabold text-[#0f0726] mb-3">{webinar.title}</h2>
+                    <div className="space-y-2 text-sm text-gray-600 font-medium mb-4">
+                      <div className="flex items-center">
+                        <Calendar className="w-4 h-4 mr-2 text-primary-600 shrink-0" />
+                        <span>{new Date(webinar.date).toLocaleDateString('en-US', { 
+                          weekday: 'long',
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        })}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <Clock className="w-4 h-4 mr-2 text-primary-600 shrink-0" />
+                        <span>{webinar.time} • {webinar.duration}</span>
+                      </div>
+                    </div>
+
+                    {webinar.learningOutcomes && (
+                      <div className="mb-4 bg-primary-50/50 p-3 rounded-xl border border-primary-100">
+                        <div className="flex items-start gap-2">
+                          <BookOpen className="w-4 h-4 text-primary-600 shrink-0 mt-0.5" />
+                          <div>
+                            <h3 className="text-xs font-bold text-gray-800 uppercase tracking-wider mb-1">Outcomes:</h3>
+                            <p className={`text-xs text-gray-600 font-medium leading-relaxed ${expandedWebinar === webinar.id ? '' : 'line-clamp-2'}`}>
+                              {webinar.learningOutcomes}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
                     )}
-                    <button
-                      onClick={() => toggleExpand(webinar.id)}
-                      className="flex items-center text-primary-500 hover:text-primary-600 transition-colors duration-300"
-                    >
-                      {expandedWebinar === webinar.id ? 'Show Less' : 'Show More'}
-                      <ChevronDown 
-                        className={`w-5 h-5 ml-1 transition-transform duration-300 ${
-                          expandedWebinar === webinar.id ? 'transform rotate-180' : ''
-                        }`}
-                      />
-                    </button>
+
+                    <p className={`text-sm text-gray-600 leading-relaxed font-medium ${expandedWebinar === webinar.id ? '' : 'line-clamp-3'}`}>
+                      {webinar.description}
+                    </p>
                   </div>
+                </div>
+
+                <div className="p-6 pt-0 flex justify-between items-center gap-2">
+                  {webinar.formLink ? (
+                    <motion.a
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      href={webinar.formLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 text-white text-xs font-bold rounded-lg hover:bg-primary-700 transition-colors shadow-sm"
+                    >
+                      Register Now
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </motion.a>
+                  ) : <div />}
+
+                  <button
+                    onClick={() => toggleExpand(webinar.id)}
+                    className="flex items-center text-xs font-bold text-primary-600 hover:text-primary-700 transition-colors"
+                  >
+                    {expandedWebinar === webinar.id ? 'Less' : 'More'}
+                    <ChevronDown 
+                      className={`w-4 h-4 ml-0.5 transition-transform duration-300 ${
+                        expandedWebinar === webinar.id ? 'transform rotate-180' : ''
+                      }`}
+                    />
+                  </button>
                 </div>
               </motion.div>
             ))}

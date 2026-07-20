@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import { Star } from 'lucide-react';
 
 const testimonials = [
   {
@@ -7,7 +8,7 @@ const testimonials = [
     name: "Sarah Johnson",
     role: "Entrepreneur",
     image: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg",
-    quote: "The mentorship program completely transformed my approach to personal branding. I've gained the confidence and skills to establish my digital presence, which has opened up numerous opportunities for my small business.",
+    quote: "The mentorship program completely transformed my approach to personal branding. I've gained the confidence and skills to establish my digital presence, which has opened up numerous opportunities for my business.",
     rating: 5
   },
   {
@@ -15,7 +16,7 @@ const testimonials = [
     name: "Michael Chen",
     role: "Student",
     image: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg",
-    quote: "The training sessions were incredibly valuable. I learned practical skills that I could immediately apply to my business. The personalized attention and guidance made all the difference.",
+    quote: "The training sessions were incredibly valuable. I learned practical skills that I could immediately apply. The personalized attention and guidance made all the difference.",
     rating: 5
   },
   {
@@ -23,7 +24,7 @@ const testimonials = [
     name: "Emily Rodriguez",
     role: "Digital Marketer",
     image: "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg",
-    quote: "Joining this program was one of the best decisions I've made for my career. The community support and expert guidance helped me take my digital marketing skills to the next level.",
+    quote: "Joining this program was one of the best decisions I've made for my career. The community support and expert guidance helped me take my digital presence to the next level.",
     rating: 5
   },
   {
@@ -31,7 +32,7 @@ const testimonials = [
     name: "David Kim",
     role: "Tech Entrepreneur",
     image: "https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg",
-    quote: "The AI and technology workshops were eye-opening. I've been able to implement cutting-edge solutions in my business, thanks to the practical knowledge gained from these sessions.",
+    quote: "The AI and technology workshops were eye-opening. I've been able to implement cutting-edge solutions in my workflow, thanks to the practical knowledge gained from these sessions.",
     rating: 5
   }
 ];
@@ -58,91 +59,81 @@ export default function Testimonials() {
     : testimonials.filter(t => t.role.toLowerCase() === activeFilter);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-50 py-20">
-      <div className="container mx-auto px-4">
+    <div className="bg-[#faf9fe] py-16 md:py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1 }}
-          className="max-w-6xl mx-auto"
+          transition={{ duration: 0.8 }}
+          className="max-w-5xl mx-auto"
         >
           {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.8 }}
-            className="text-center mb-16"
-          >
-            <h1 className="text-4xl md:text-5xl font-bold text-primary-800 mb-6">
-              Success Stories
+          <div className="text-center mb-12">
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-primary-50 border border-primary-200 text-primary-600 text-xs font-bold tracking-wider rounded-full uppercase mb-4">
+              ★ Community Feedback
+            </span>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#0f0726]">
+              Success <span className="text-primary-600">Stories</span>
             </h1>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Hear from our community members about their journey and transformation through our programs.
+            <p className="text-gray-600 text-base max-w-2xl mx-auto mt-4 font-medium">
+              Hear from educators, students, and entrepreneurs about their transformation through our programs.
             </p>
-          </motion.div>
+          </div>
 
           {/* Filter Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.8 }}
-            className="flex flex-wrap justify-center gap-4 mb-12"
-          >
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-12">
             {['all', 'entrepreneur', 'student', 'digital marketer', 'tech entrepreneur'].map((filter) => (
               <motion.button
                 key={filter}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={() => setActiveFilter(filter)}
-                className={`px-6 py-2 rounded-full font-medium transition-colors duration-300 ${
+                className={`px-4 py-2 rounded-full capitalize transition-colors duration-200 text-xs font-bold ${
                   activeFilter === filter
-                    ? 'bg-primary-600 text-white'
-                    : 'bg-white text-gray-600 hover:bg-primary-50'
+                    ? 'bg-primary-600 text-white shadow-md'
+                    : 'bg-white border border-gray-200 text-gray-700 hover:bg-primary-50'
                 }`}
               >
                 {filter.charAt(0).toUpperCase() + filter.slice(1)}
               </motion.button>
             ))}
-          </motion.div>
+          </div>
 
           {/* Testimonials Grid */}
           <motion.div
             variants={staggerContainer}
             initial="initial"
             animate="animate"
-            className="grid grid-cols-1 md:grid-cols-2 gap-8"
+            className="grid grid-cols-1 md:grid-cols-2 gap-6"
           >
             {filteredTestimonials.map((testimonial) => (
               <motion.div
                 key={testimonial.id}
                 variants={fadeInUp}
-                whileHover={{ scale: 1.02 }}
-                className="bg-white rounded-xl p-8 shadow-lg"
+                whileHover={{ y: -4 }}
+                className="bg-white rounded-2xl p-6 sm:p-8 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between"
               >
-                <div className="flex items-center mb-6">
-                  <img
-                    src={testimonial.image}
-                    alt={testimonial.name}
-                    className="w-16 h-16 rounded-full object-cover mr-4"
-                  />
-                  <div>
-                    <h3 className="text-xl font-semibold text-primary-700">{testimonial.name}</h3>
-                    <p className="text-gray-500">{testimonial.role}</p>
+                <div>
+                  <div className="flex items-center gap-4 mb-4">
+                    <img
+                      src={testimonial.image}
+                      alt={testimonial.name}
+                      className="w-12 h-12 rounded-full object-cover ring-2 ring-primary-100"
+                    />
+                    <div>
+                      <h3 className="text-base font-extrabold text-[#0f0726]">{testimonial.name}</h3>
+                      <p className="text-xs text-primary-600 font-semibold">{testimonial.role}</p>
+                    </div>
                   </div>
+                  <div className="flex mb-3 gap-1">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 text-amber-400 fill-amber-400" />
+                    ))}
+                  </div>
+                  <p className="text-sm text-gray-600 leading-relaxed font-medium italic">
+                    "{testimonial.quote}"
+                  </p>
                 </div>
-                <div className="flex mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <svg
-                      key={i}
-                      className="w-5 h-5 text-yellow-400"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                </div>
-                <p className="text-gray-600 italic">"{testimonial.quote}"</p>
               </motion.div>
             ))}
           </motion.div>
@@ -151,4 +142,4 @@ export default function Testimonials() {
       </div>
     </div>
   );
-} 
+}

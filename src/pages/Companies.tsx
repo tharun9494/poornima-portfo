@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Building2, ArrowLeft } from 'lucide-react';
+import { Building2, ArrowLeft, ArrowRight, ShieldCheck, Briefcase, Award, Users, Globe } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import forefightera from './images/forefightera.png';
 
@@ -18,24 +18,51 @@ function Companies() {
     },
     {
       url: "https://media.licdn.com/dms/image/v2/D560BAQHVJ8Ct7p7BIA/img-crop_100/B56ZZHoohBGUAQ-/0/1744958558149?e=1753920000&v=beta&t=jk5MabKS-eDr4Wi0KjbUGF84JanCUjS-r9Ag_e8qE2E",
-      name: "Company 1"
+      name: "Industry Partner"
     },
     {
       url: "https://media.licdn.com/dms/image/v2/D560BAQHvpmLxXoZguw/company-logo_200_200/company-logo_200_200/0/1704727195316?e=1753920000&v=beta&t=wqA3xz4FVmSJeaRitXLMIzK4Y3EDljf0-gL0QNXEGhY",
-      name: "Company 2"
+      name: "Enterprise Partner"
     },
     {
       url: "https://media.licdn.com/dms/image/v2/D5603AQHKy5fLYNG47g/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1708168071573?e=1753920000&v=beta&t=uaYMIRFpACZaMReecHAIIUX5N4gjReyzme4ia-Y0PlE",
-      name: "Company 3"
+      name: "Tech Solutions"
     },
     {
       url: "https://media.licdn.com/dms/image/v2/C4D0BAQEsHtdCtiZ_Sw/company-logo_200_200/company-logo_200_200/0/1654665614322/techshiksha_logo?e=1753920000&v=beta&t=jvar5_Y92-tCqMGUjkHzwM1MoNnsJs3wsHAm8_xIf0o",
       name: "TechShiksha"
     },
-    
     {
       url: "https://media.licdn.com/dms/image/v2/D4E0BAQFgSB01EswgoQ/company-logo_200_200/company-logo_200_200/0/1722804523899/novuspark_logo?e=1754524800&v=beta&t=z66hRsnQCe-BPGy0LrNvI3mikaYh6JtNrrCIXdIX8hg",
       name: "Novuspark"
+    }
+  ];
+
+  const highlights = [
+    {
+      icon: <Building2 className="w-5 h-5 text-primary-600" />,
+      title: "Corporate Upskilling",
+      subtitle: "Custom AI training for teams"
+    },
+    {
+      icon: <Briefcase className="w-5 h-5 text-primary-600" />,
+      title: "Hiring Pipeline",
+      subtitle: "Direct access to AI-trained talent"
+    },
+    {
+      icon: <Award className="w-5 h-5 text-primary-600" />,
+      title: "Executive Coaching",
+      subtitle: "AI leadership strategies"
+    },
+    {
+      icon: <Users className="w-5 h-5 text-primary-600" />,
+      title: "CSR Initiatives",
+      subtitle: "Women empowerment programs"
+    },
+    {
+      icon: <Globe className="w-5 h-5 text-primary-600" />,
+      title: "Global Network",
+      subtitle: "Connect across industries"
     }
   ];
 
@@ -55,91 +82,129 @@ function Companies() {
       y: 0,
       opacity: 1,
       transition: {
-        duration: 0.5
+        duration: 0.4
       }
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white py-16">
-      <div className="container mx-auto px-4">
-        {/* Back Button */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-8"
-        >
-          <div className="flex flex-wrap gap-4 items-center">
-            <Link 
-              to="/" 
-              className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors duration-200"
-            >
-              <ArrowLeft className="w-5 h-5" />
-              Back to Home
-            </Link>
+    <div className="bg-white py-12 md:py-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Back Link */}
+        <div className="mb-6">
+          <Link 
+            to="/" 
+            className="inline-flex items-center gap-2 text-xs font-bold text-primary-600 hover:text-primary-700 transition-colors uppercase tracking-wider"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Home
+          </Link>
+        </div>
+
+        {/* Top Hero Banner */}
+        <div className="bg-gradient-to-r from-[#f5f0ff] via-[#faf7ff] to-[#f3ebfc] rounded-3xl p-6 sm:p-10 lg:p-12 border border-purple-100 mb-16 shadow-sm">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             
-          </div>
-        </motion.div>
+            {/* Left Content */}
+            <div className="lg:col-span-8 flex flex-col items-start">
+              <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-white border border-purple-200 text-[#6d28d9] text-xs font-extrabold tracking-wider rounded-full uppercase mb-4 shadow-sm">
+                ✦ PARTNER COMPANIES
+              </span>
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#0f0726] leading-tight tracking-tight mb-4">
+                Empowering Growth with <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#6d28d9] to-[#db2777]">Leading Organizations</span>
+              </h1>
+              <p className="text-gray-600 text-base sm:text-lg font-medium leading-relaxed max-w-2xl">
+                We collaborate with innovative companies and corporate leaders to provide workforce training, internship placements, and strategic AI adoption.
+              </p>
+            </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
-        >
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">Our Partner Companies</h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            We collaborate with leading companies to provide opportunities and resources for students and women empowerment.
-          </p>
-        </motion.div>
+            {/* Right Recommendation Card */}
+            <div className="lg:col-span-4 bg-white/90 backdrop-blur-md rounded-2xl p-6 border border-purple-100 shadow-sm flex flex-col justify-between">
+              <div className="flex items-start gap-4 mb-4">
+                <div className="w-10 h-10 rounded-full bg-[#6d28d9] text-white flex items-center justify-center shrink-0">
+                  <Building2 size={20} />
+                </div>
+                <div>
+                  <h3 className="text-sm font-extrabold text-[#0f0726] mb-1">Partner With Us</h3>
+                  <p className="text-xs text-gray-500 font-medium leading-relaxed">
+                    Custom corporate AI workshops and talent sourcing for your company.
+                  </p>
+                </div>
+              </div>
+              <a
+                href="/#contact"
+                className="w-full py-2.5 px-4 border border-[#6d28d9] text-[#6d28d9] text-xs font-bold rounded-lg hover:bg-purple-50 transition-colors flex items-center justify-center gap-1.5"
+              >
+                Inquire Corporate Training <ArrowRight size={14} />
+              </a>
+            </div>
 
-        {/* Company Logos Section */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-        >
-          <div className="flex items-center justify-center gap-3 mb-10">
-            <Building2 className="w-8 h-8 text-blue-600" />
-            <h2 className="text-3xl font-semibold text-gray-800">Trusted Partners</h2>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
-            {companyLogos.map((logo, index) => (
+        </div>
+
+        {/* Company Logos Grid */}
+        <div className="mb-16">
+          <div className="flex items-center justify-center gap-4 mb-10">
+            <div className="h-[1px] bg-purple-100 flex-1 max-w-[150px] hidden sm:block"></div>
+            <span className="text-xs font-extrabold tracking-widest text-[#6d28d9] uppercase bg-purple-50 px-4 py-1.5 rounded-full border border-purple-100">
+              ✦ TRUSTED ORGANIZATIONS
+            </span>
+            <div className="h-[1px] bg-purple-100 flex-1 max-w-[150px] hidden sm:block"></div>
+          </div>
+
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 max-w-6xl mx-auto"
+          >
+            {companyLogos.map((logoItem, index) => (
               <motion.div
                 key={index}
                 variants={itemVariants}
-                whileHover={{ 
-                  scale: 1.05,
-                  transition: { duration: 0.2 }
-                }}
-                className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center group border border-gray-100"
+                whileHover={{ y: -4 }}
+                className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col items-center justify-center group"
               >
-                <div className="relative w-full h-32 flex items-center justify-center">
-                  {imageErrors[logo.url] ? (
+                <div className="relative w-full h-24 flex items-center justify-center">
+                  {imageErrors[logoItem.url] ? (
                     <div className="text-gray-500 text-center">
-                      <p className="font-medium">{logo.name}</p>
-                      <p className="text-sm">Logo unavailable</p>
+                      <p className="font-extrabold text-xs text-[#0f0726]">{logoItem.name}</p>
                     </div>
                   ) : (
                     <img
-                      src={logo.url}
-                      alt={logo.name}
-                      className="max-h-24 w-auto object-contain transition-transform duration-300 group-hover:scale-110"
-                      onError={() => handleImageError(logo.url)}
+                      src={logoItem.url}
+                      alt={logoItem.name}
+                      className="max-h-20 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                      onError={() => handleImageError(logoItem.url)}
                       loading="lazy"
                     />
                   )}
-                  <div className="absolute inset-0 bg-blue-50 bg-opacity-0 group-hover:bg-opacity-20 rounded-lg transition-all duration-300" />
                 </div>
+                <span className="text-xs font-extrabold text-[#0f0726] mt-2">{logoItem.name}</span>
               </motion.div>
             ))}
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
+
+        {/* Bottom Highlights Bar */}
+        <div className="bg-[#f5f0ff]/80 border border-purple-100 rounded-2xl p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6">
+          {highlights.map((item, idx) => (
+            <div key={idx} className="flex items-center gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-white shadow-sm border border-purple-100 flex items-center justify-center shrink-0">
+                {item.icon}
+              </div>
+              <div className="flex flex-col">
+                <span className="text-xs font-extrabold text-[#0f0726]">{item.title}</span>
+                <span className="text-[11px] text-gray-500 font-medium leading-tight">{item.subtitle}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
       </div>
     </div>
   );
 }
 
-export default Companies; 
+export default Companies;

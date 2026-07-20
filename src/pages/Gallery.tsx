@@ -43,62 +43,71 @@ const Gallery: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
+      <div className="py-20 flex items-center justify-center bg-white">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-      <h1 className="text-3xl sm:text-4xl font-bold text-center mb-8 sm:mb-12">Gallery</h1>
+    <div className="py-16 md:py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-primary-50 border border-primary-200 text-primary-600 text-xs font-bold tracking-wider rounded-full uppercase mb-4">
+            ★ Moments & Highlights
+          </span>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#0f0726]">
+            Photo <span className="text-primary-600">Gallery</span>
+          </h1>
+          <p className="text-gray-600 text-base max-w-2xl mx-auto mt-4 font-medium">
+            Highlights from workshops, campus sessions, corporate trainings, and community meetups.
+          </p>
+        </div>
 
-      {/* Section Filter */}
-      <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-6 sm:mb-8">
-        {sections.map((section) => (
-          <motion.button
-            key={section}
-            onClick={() => setSelectedSection(section)}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full capitalize transition-colors duration-300 text-sm sm:text-base ${
-              selectedSection === section
-                ? 'bg-primary-500 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
-          >
-            {section}
-          </motion.button>
-        ))}
-      </div>
+        {/* Section Filter */}
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-10">
+          {sections.map((section) => (
+            <motion.button
+              key={section}
+              onClick={() => setSelectedSection(section)}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className={`px-4 py-2 rounded-full capitalize transition-colors duration-200 text-xs font-bold ${
+                selectedSection === section
+                  ? 'bg-primary-600 text-white shadow-md'
+                  : 'bg-primary-50 text-gray-700 hover:bg-primary-100'
+              }`}
+            >
+              {section}
+            </motion.button>
+          ))}
+        </div>
 
-      {filteredImages.length === 0 ? (
-        <p className="text-center text-gray-600 text-sm sm:text-base">No images found in this section.</p>
-      ) : (
-        <div className="relative">
-          <div className="overflow-x-auto pb-6 hide-scrollbar">
-            <div className="flex gap-4 px-4 min-w-max">
+        {filteredImages.length === 0 ? (
+          <p className="text-center text-gray-500 font-medium text-base py-12">No images found in this category.</p>
+        ) : (
+          <div className="relative">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {filteredImages.map((image) => (
                 <motion.div
                   key={image.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
-                  className="flex-shrink-0 w-72"
                 >
                   <div 
-                    className="relative group cursor-pointer overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+                    className="relative group cursor-pointer overflow-hidden rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 bg-gray-50"
                     onClick={() => setSelectedImage(image)}
                   >
                     <img
                       src={image.url}
                       alt={image.eventName}
-                      className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
+                      className="w-full h-52 object-cover transition-transform duration-500 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 flex items-end">
-                      <div className="p-4 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                        <h3 className="text-lg font-semibold mb-1">{image.eventName}</h3>
-                        <p className="text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0f0726]/80 via-[#0f0726]/30 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end p-4">
+                      <div className="text-white">
+                        <h3 className="text-sm font-bold mb-1">{image.eventName}</h3>
+                        <p className="text-xs text-gray-200 line-clamp-2">
                           {image.description}
                         </p>
                       </div>
@@ -108,53 +117,49 @@ const Gallery: React.FC = () => {
               ))}
             </div>
           </div>
-          
-          {/* Gradient overlays for scroll indication */}
-          <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-white to-transparent pointer-events-none"></div>
-          <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-white to-transparent pointer-events-none"></div>
-        </div>
-      )}
+        )}
 
-      {/* Image Modal */}
-      {selectedImage && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-2 sm:p-4"
-          onClick={() => setSelectedImage(null)}
-        >
-          <motion.div 
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="relative max-w-4xl w-full bg-white rounded-lg overflow-hidden"
-            onClick={e => e.stopPropagation()}
+        {/* Image Modal */}
+        {selectedImage && (
+          <div 
+            className="fixed inset-0 bg-[#0f0726]/90 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+            onClick={() => setSelectedImage(null)}
           >
-            <img
-              src={selectedImage.url}
-              alt={selectedImage.eventName}
-              className="w-full h-auto max-h-[70vh] sm:max-h-[80vh] object-contain"
-            />
-            <div className="p-4 sm:p-6">
-              <h3 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-2">{selectedImage.eventName}</h3>
-              <p className="text-sm sm:text-base text-gray-600">{selectedImage.description}</p>
-              <div className="mt-3 sm:mt-4 flex justify-between items-center">
-                <span className="text-xs sm:text-sm font-medium text-primary-500 capitalize">
-                  {selectedImage.section}
-                </span>
-                <span className="text-xs sm:text-sm text-gray-500">
-                  {new Date(selectedImage.uploadedAt.toDate()).toLocaleDateString()}
-                </span>
-              </div>
-            </div>
-            <button
-              className="absolute top-2 sm:top-4 right-2 sm:right-4 text-white bg-black bg-opacity-50 rounded-full p-1.5 sm:p-2 hover:bg-opacity-75 transition-colors"
-              onClick={() => setSelectedImage(null)}
+            <motion.div 
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="relative max-w-4xl w-full bg-white rounded-2xl overflow-hidden shadow-2xl"
+              onClick={e => e.stopPropagation()}
             >
-              <span className="text-lg sm:text-xl">✕</span>
-            </button>
-          </motion.div>
-        </div>
-      )}
+              <img
+                src={selectedImage.url}
+                alt={selectedImage.eventName}
+                className="w-full h-auto max-h-[75vh] object-contain bg-black"
+              />
+              <div className="p-6">
+                <h3 className="text-xl font-extrabold text-[#0f0726] mb-2">{selectedImage.eventName}</h3>
+                <p className="text-sm text-gray-600 font-medium mb-3">{selectedImage.description}</p>
+                <div className="flex justify-between items-center text-xs font-bold text-gray-500">
+                  <span className="px-3 py-1 bg-primary-50 text-primary-600 rounded-full capitalize">
+                    {selectedImage.section}
+                  </span>
+                  <span>
+                    {selectedImage.uploadedAt?.toDate ? new Date(selectedImage.uploadedAt.toDate()).toLocaleDateString() : ''}
+                  </span>
+                </div>
+              </div>
+              <button
+                className="absolute top-4 right-4 text-white bg-black/60 rounded-full w-8 h-8 flex items-center justify-center hover:bg-black/80 transition-colors"
+                onClick={() => setSelectedImage(null)}
+              >
+                ✕
+              </button>
+            </motion.div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
 
-export default Gallery; 
+export default Gallery;

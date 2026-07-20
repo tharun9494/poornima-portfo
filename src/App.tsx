@@ -83,43 +83,43 @@ function App() {
           element={
             <Layout>
               <div className="flex flex-col">
-                <section id="home" className="min-h-screen py-1">
+                <section id="home" className="w-full">
                   <Home />
                 </section>
-                <section id="about" className="min-h-screen py-20 bg-gray-50">
+                <section id="about" className="w-full">
                   <About />
                 </section>
-                <section id="what-i-do" className="min-h-screen py-20">
+                <section id="what-i-do" className="w-full">
                   <WhatIDo />
                 </section>
-                <section id="circle" className="min-h-screen py-20 bg-gray-50">
+                <section id="circle" className="w-full">
                   <Circle />
                 </section>
-                <section id="events" className="min-h-screen py-20">
+                <section id="events" className="w-full">
                   <Events />
                 </section>
-                <section id="webinars" className="min-h-screen py-20 bg-gray-50">
+                <section id="webinars" className="w-full">
                   <Webinars />
                 </section>
-                <section id="community" className="min-h-screen py-20 bg-gray-50">
+                <section id="community" className="w-full">
                   <Community />
                 </section>
-                <section id="student-community" className="min-h-screen py-20">
+                <section id="student-community" className="w-full">
                   <StudentCommunity />
                 </section>
-                <section id="ainxtgen" className="min-h-screen py-20 bg-gray-50">
+                <section id="ainxtgen" className="w-full">
                   <Ainxtgen />
                 </section>
-                <section id="queenflluence-hub" className="min-h-screen py-20">
+                <section id="queenflluence-hub" className="w-full">
                   <QueenflluenceHub />
                 </section>
-                <section id="gallery" className="min-h-screen py-20">
+                <section id="gallery" className="w-full">
                   <Gallery />
                 </section>
-                <section id="testimonials" className="min-h-screen py-20 bg-gray-50">
+                <section id="testimonials" className="w-full">
                   <Testimonials />
                 </section>
-                <section id="contact" className="min-h-screen py-20">
+                <section id="contact" className="w-full">
                   <Contact />
                 </section>
               </div>

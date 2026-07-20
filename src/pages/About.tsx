@@ -15,11 +15,17 @@ const staggerContainer = {
 };
 
 export default function About() {
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-50">
-     
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
+    <div className="bg-[#faf9fe]">
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             variants={staggerContainer}
             initial="initial"
@@ -27,46 +33,44 @@ export default function About() {
             viewport={{ once: true }}
             className="max-w-4xl mx-auto"
           >
-            <motion.div variants={fadeInUp} className="mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold text-primary-800 mb-6">My Journey</h2>
-              <div className="space-y-6 text-lg text-gray-600 leading-relaxed">
+            <motion.div variants={fadeInUp} className="mb-12 text-center md:text-left">
+              <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-primary-50 border border-primary-200 text-primary-600 text-xs font-bold tracking-wider rounded-full uppercase mb-4">
+                ★ About Poornimma S
+              </span>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#0f0726] mb-6 leading-tight">
+                Empowering Minds, <span className="text-primary-600">Building Futures</span>
+              </h2>
+              <div className="space-y-6 text-base sm:text-lg text-gray-600 leading-relaxed font-medium">
                 <p>
                   Hi, I'm Poornimma S — an AI Instructor, Career Coach, and Personal Branding Mentor. I help
-                  students, women entrepreneurs, and teachers gain confidence and find their path.
+                  students, women entrepreneurs, and teachers gain confidence and find their path in the digital world.
                 </p>
                 <p>
-                  I have 6+ years of experience in IT and 3+ years in personal branding. I've seen how telling your
-                  story and building your online presence can change your life. Even now, I'm still learning every day.
+                  I have 6+ years of experience in IT and 3+ years in personal branding. I've seen firsthand how telling your
+                  authentic story and building your online presence can unlock incredible career opportunities.
                 </p>
                 <p>
-                  I've helped over 3,000+ people — from students and women starting their careers again to teachers
-                  wanting to grow. Through workshops, coaching, and communities, I guide you to create a strong
-                  personal brand, improve your LinkedIn profile, and open new opportunities.
+                  I've guided over 3,000+ individuals — from students starting out to women relaunching their careers and educators seeking growth. Through practical workshops, 1-on-1 coaching, and vibrant communities, I help you build a standout personal brand and master AI tools.
                 </p>
                 <p>
-                  I also lead two communities — Ainxtgen for students and Queenflluence Hub for women — where
-                  people support each other and grow together.
-                </p>
-                <p>
-                  If you want to build your confidence, share your story, and take your career or business forward,
-                  I'm here to help you every step of the way.
+                  I also lead two specialized communities — <strong className="text-primary-600 font-bold">Ainxtgen</strong> for students and <strong className="text-accent-600 font-bold">Queenflluence Hub</strong> for women — where members support each other and grow together.
                 </p>
               </div>
             </motion.div>
 
-            <motion.div variants={fadeInUp} className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+            <motion.div variants={fadeInUp} className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
               {[
                 { number: '6+', label: 'Years in IT' },
                 { number: '3+', label: 'Years in Personal Branding' },
-                { number: '3000+', label: 'People Helped' }
+                { number: '3000+', label: 'People Guided & Empowered' }
               ].map((stat, index) => (
                 <motion.div
                   key={index}
-                  whileHover={{ scale: 1.05 }}
-                  className="bg-primary-50 rounded-xl p-6 text-center"
+                  whileHover={{ y: -5 }}
+                  className="bg-white rounded-2xl p-6 text-center border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300"
                 >
-                  <h3 className="text-4xl font-bold text-primary-600 mb-2">{stat.number}</h3>
-                  <p className="text-gray-600">{stat.label}</p>
+                  <h3 className="text-4xl font-extrabold text-primary-600 mb-2">{stat.number}</h3>
+                  <p className="text-sm font-semibold text-gray-600">{stat.label}</p>
                 </motion.div>
               ))}
             </motion.div>
@@ -74,25 +78,24 @@ export default function About() {
         </div>
       </section>
 
-
       {/* Call to Action */}
-      <section className="py-20 bg-gradient-to-r from-primary-600 to-secondary-600 text-white">
-        <div className="container mx-auto px-4">
+      <section className="py-16 bg-[#0f0726] text-white">
+        <div className="max-w-4xl mx-auto px-4 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="max-w-4xl mx-auto text-center"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Transform Your Career?</h2>
-            <p className="text-lg text-blue-100 mb-8">
-              Join our community and start your journey towards building a powerful personal brand and achieving your goals.
+            <h2 className="text-3xl md:text-4xl font-extrabold mb-4 text-white">Ready to Transform Your Career?</h2>
+            <p className="text-gray-300 text-base mb-8 max-w-2xl mx-auto font-medium">
+              Join our community today and start your journey towards building a powerful personal brand and achieving your professional goals.
             </p>
             <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-white text-primary-600 px-8 py-3 rounded-full font-medium hover:bg-blue-50 transition-colors duration-300"
+              onClick={() => scrollToSection('contact')}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="bg-primary-600 text-white px-8 py-3.5 rounded-lg font-semibold hover:bg-primary-700 shadow-lg transition-all duration-300 text-base"
             >
               Get Started Today
             </motion.button>

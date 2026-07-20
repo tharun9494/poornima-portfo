@@ -1,16 +1,22 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { 
-  Linkedin, 
   GraduationCap, 
   Briefcase, 
   BookOpen, 
-  Calendar, 
-  Gift,
-  Users,
-  BookOpenCheck,
+  Home as HomeIcon,
+  Video,
   Sparkles,
-  TrendingUp
+  Award,
+  Bot,
+  Building2,
+  Rocket,
+  Users,
+  Presentation,
+  ArrowRight,
+  ShieldCheck,
+  Wand2,
+  Clock,
+  Award as CertificateIcon
 } from 'lucide-react';
 
 const containerVariants = {
@@ -18,7 +24,7 @@ const containerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.2
+      staggerChildren: 0.08
     }
   }
 };
@@ -29,196 +35,282 @@ const itemVariants = {
     y: 0,
     opacity: 1,
     transition: {
-      duration: 0.5,
+      duration: 0.4,
       ease: "easeOut"
     }
   }
 };
 
 function WhatIDo() {
-  const services = [
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const categoryPrograms = [
     {
-      id: 1,
-      title: "LinkedIn Optimisation",
-      icon: <Linkedin className="w-8 h-8 sm:w-12 sm:h-12 text-primary-600" />,
-      description: "Transform your LinkedIn presence with a complete profile makeover. I'll help you craft compelling headlines and summaries that capture attention, while providing strategic content ideas to keep you visible and engaged in your professional network."
+      id: "educators",
+      title: "AI for Educators",
+      description: "Teach smarter, create better lessons, and engage students with AI.",
+      icon: <GraduationCap className="w-5 h-5" />,
+      colorClass: "bg-purple-100 text-purple-600"
     },
     {
-      id: 2,
-      title: "For Students",
-      icon: <GraduationCap className="w-8 h-8 sm:w-12 sm:h-12 text-primary-600" />,
-      description: "Start your professional journey on the right foot with comprehensive career guidance and support. From securing internships to building your first professional profile, I'll help you establish a strong foundation for your future career success."
+      id: "trainers",
+      title: "AI for Trainers & Coaches",
+      description: "Design powerful trainings, workshops and coaching programs with AI.",
+      icon: <Presentation className="w-5 h-5" />,
+      colorClass: "bg-pink-100 text-pink-600"
     },
     {
-      id: 3,
-      title: "For Professionals",
-      icon: <Briefcase className="w-8 h-8 sm:w-12 sm:h-12 text-primary-600" />,
-      description: "Elevate your professional brand and navigate career transitions with confidence. Whether you're looking to switch jobs or enhance your current position, I'll help you create a compelling narrative that showcases your expertise and achievements."
+      id: "professionals",
+      title: "AI for Professionals",
+      description: "Boost productivity, save time and work smarter with AI tools.",
+      icon: <Briefcase className="w-5 h-5" />,
+      colorClass: "bg-blue-100 text-blue-600"
     },
     {
-      id: 4,
-      title: "For Faculties",
-      icon: <BookOpen className="w-8 h-8 sm:w-12 sm:h-12 text-primary-600" />,
-      description: "Build your academic presence and share your research with the world. I'll help you establish yourself as a thought leader, secure speaking opportunities, and effectively communicate your expertise to a broader audience through strategic online presence."
+      id: "homemakers",
+      title: "AI for Homemakers",
+      description: "Start earning, create content and build online income using AI.",
+      icon: <HomeIcon className="w-5 h-5" />,
+      colorClass: "bg-amber-100 text-amber-600"
     },
     {
-      id: 5,
-      title: "SheLeads: Business Kickstart",
-      icon: <Users className="w-8 h-8 sm:w-12 sm:h-12 text-primary-600" />,
-      description: "Guiding women to start their journey as trainers, coaches, or founders through step-by-step strategies, content creation, and personal branding mastery."
+      id: "creators",
+      title: "AI for Creators",
+      description: "Create stunning content, grow your brand and engage your audience.",
+      icon: <Video className="w-5 h-5" />,
+      colorClass: "bg-emerald-100 text-emerald-600"
     },
     {
-      id: 6,
-      title: "Campus-to-Corporate Program",
-      icon: <BookOpenCheck className="w-8 h-8 sm:w-12 sm:h-12 text-primary-600" />,
-      description: "For college faculty who want to bridge the gap between academic theory and industry needs, support student careers, and build their own presence as thought leaders."
-    },
-    {
-      id: 7,
-      title: "Personal Branding for All",
-      icon: <Sparkles className="w-8 h-8 sm:w-12 sm:h-12 text-primary-600" />,
-      description: "Whether you're a student, educator, or aspiring entrepreneur — I help you build a powerful personal brand through storytelling, LinkedIn strategy, and authentic visibility."
+      id: "students",
+      title: "AI for Students",
+      description: "Study better, do research faster and prepare for your dream career.",
+      icon: <BookOpen className="w-5 h-5" />,
+      colorClass: "bg-purple-100 text-purple-600"
     }
   ];
 
-  const workshops = {
-    title: "Workshops & Sessions",
-    icon: <Calendar className="w-8 h-8 sm:w-12 sm:h-12 text-primary-600" />,
-    description: "Join our engaging workshops and sessions designed to help you master the art of personal branding and career development. From AI-powered career building strategies to LinkedIn masterclasses, our sessions provide practical insights and actionable steps for your professional growth. Perfect for both college and corporate environments.",
-    note: "✨ Invite me for college or corporate sessions"
-  };
+  const specializedPrograms = [
+    {
+      id: "prompt-engineering",
+      title: "Prompt Engineering Masterclass",
+      description: "From beginner to advanced prompting techniques & frameworks.",
+      icon: <Sparkles className="w-5 h-5" />,
+      colorClass: "bg-purple-100 text-purple-600"
+    },
+    {
+      id: "personal-branding",
+      title: "Personal Branding with AI",
+      description: "Build your personal brand, create content and become a thought leader.",
+      icon: <Award className="w-5 h-5" />,
+      colorClass: "bg-pink-100 text-pink-600"
+    },
+    {
+      id: "ai-tools",
+      title: "AI Tools Mastery",
+      description: "Master top AI tools and integrate them into your daily workflow.",
+      icon: <Bot className="w-5 h-5" />,
+      colorClass: "bg-blue-100 text-blue-600"
+    },
+    {
+      id: "corporate-ai",
+      title: "Corporate AI Training",
+      description: "Customized training programs for teams and organizations to adopt AI.",
+      icon: <Building2 className="w-5 h-5" />,
+      colorClass: "bg-amber-100 text-amber-600"
+    },
+    {
+      id: "bootcamps",
+      title: "Workshops & Bootcamps",
+      description: "Short term, high impact workshops and bootcamps for quick learning.",
+      icon: <Rocket className="w-5 h-5" />,
+      colorClass: "bg-emerald-100 text-emerald-600"
+    },
+    {
+      id: "hub-community",
+      title: "AIINFLUENCERS HUB Community",
+      description: "Join our community, attend live sessions, challenges and network.",
+      icon: <Users className="w-5 h-5" />,
+      colorClass: "bg-purple-100 text-purple-600"
+    }
+  ];
 
-  const freebies = {
-    title: "Freebies",
-    icon: <Gift className="w-8 h-8 sm:w-12 sm:h-12 text-primary-600" />,
-    description: "Access our collection of free resources designed to kickstart your professional journey. From comprehensive LinkedIn checklists to professional resume templates and vision board guides, these tools will help you take the first step towards building your personal brand and achieving your career goals."
-  };
-
-  const stepIntoTraining = {
-    title: "Step Into Training",
-    icon: <TrendingUp className="w-8 h-8 sm:w-12 sm:h-12 text-primary-600" />,
-    description: "Transform your expertise into a profitable training business. Learn how to package your knowledge, create engaging content, and build a sustainable income stream through training and coaching.",
-    features: [
-      "Content Creation & Packaging",
-      "Pricing & Revenue Models",
-      "Marketing & Client Acquisition",
-      "Business Operations & Scaling"
-    ]
-  };
+  const highlights = [
+    {
+      icon: <ShieldCheck className="w-5 h-5 text-purple-600" />,
+      title: "Beginner Friendly",
+      subtitle: "No technical skills required"
+    },
+    {
+      icon: <Wand2 className="w-5 h-5 text-purple-600" />,
+      title: "Hands-on Learning",
+      subtitle: "Practical projects & real use cases"
+    },
+    {
+      icon: <Clock className="w-5 h-5 text-purple-600" />,
+      title: "Lifetime Access",
+      subtitle: "Learn at your own pace"
+    },
+    {
+      icon: <Users className="w-5 h-5 text-purple-600" />,
+      title: "Community Support",
+      subtitle: "Learn, share & grow together"
+    },
+    {
+      icon: <CertificateIcon className="w-5 h-5 text-purple-600" />,
+      title: "Certificates",
+      subtitle: "Showcase your AI skills"
+    }
+  ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-16">
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-8 sm:mb-12 md:mb-16"
-        >
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 sm:mb-4">
-            What I Do
-          </h1>
-          <div className="w-16 sm:w-20 md:w-24 h-1 bg-primary-600 mx-auto rounded-full"></div>
-        </motion.div>
+    <div className="bg-white py-12 md:py-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <motion.div 
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mb-12 sm:mb-16 md:mb-20"
-        >
-          {services.map((service) => (
-            <motion.div
-              key={service.id}
-              variants={itemVariants}
-              whileHover={{ 
-                scale: 1.02,
-                transition: { duration: 0.2 }
-              }}
-              className="bg-white rounded-2xl shadow-lg p-6 sm:p-8 hover:shadow-2xl transition-all duration-300 border border-gray-100"
-            >
-              <div className="flex flex-col items-center text-center">
-                <motion.div
-                  whileHover={{ rotate: 360 }}
-                  transition={{ duration: 0.5 }}
-                  className="mb-3 sm:mb-4 p-2 sm:p-3 bg-primary-50 rounded-full"
+        {/* Top Hero Banner */}
+        <div className="bg-gradient-to-r from-[#f5f0ff] via-[#faf7ff] to-[#f3ebfc] rounded-3xl p-6 sm:p-10 lg:p-12 border border-purple-100 mb-16 shadow-sm">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            {/* Left Content */}
+            <div className="lg:col-span-8 flex flex-col items-start">
+              <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-white border border-purple-200 text-[#6d28d9] text-xs font-extrabold tracking-wider rounded-full uppercase mb-4 shadow-sm">
+                ✦ EXPLORE PROGRAMS
+              </span>
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#0f0726] leading-tight tracking-tight mb-4">
+                Find the Right <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#6d28d9] to-[#db2777]">AI Program</span> for You
+              </h1>
+              <p className="text-gray-600 text-base sm:text-lg font-medium leading-relaxed max-w-2xl">
+                Practical, beginner-friendly and outcome-driven programs for educators, professionals, creators, students and everyone.
+              </p>
+            </div>
+
+            {/* Right Recommendation Card */}
+            <div className="lg:col-span-4 bg-white/90 backdrop-blur-md rounded-2xl p-6 border border-purple-100 shadow-sm flex flex-col justify-between">
+              <div className="flex items-start gap-4 mb-4">
+                <div className="w-10 h-10 rounded-full bg-[#6d28d9] text-white flex items-center justify-center shrink-0">
+                  <Users size={20} />
+                </div>
+                <div>
+                  <h3 className="text-sm font-extrabold text-[#0f0726] mb-1">Not sure where to start?</h3>
+                  <p className="text-xs text-gray-500 font-medium leading-relaxed">
+                    Take our quick quiz and we'll recommend the best program for you!
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => scrollToSection('contact')}
+                className="w-full py-2.5 px-4 border border-[#6d28d9] text-[#6d28d9] text-xs font-bold rounded-lg hover:bg-purple-50 transition-colors flex items-center justify-center gap-1.5"
+              >
+                Find My Program <ArrowRight size={14} />
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        {/* Section 1: Browse Programs by Category */}
+        <div className="mb-16">
+          <div className="flex items-center justify-center gap-4 mb-10">
+            <div className="h-[1px] bg-purple-100 flex-1 max-w-[150px] hidden sm:block"></div>
+            <span className="text-xs font-extrabold tracking-widest text-[#6d28d9] uppercase bg-purple-50 px-4 py-1.5 rounded-full border border-purple-100">
+              ✦ BROWSE PROGRAMS BY CATEGORY
+            </span>
+            <div className="h-[1px] bg-purple-100 flex-1 max-w-[150px] hidden sm:block"></div>
+          </div>
+
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5"
+          >
+            {categoryPrograms.map((program) => (
+              <motion.div
+                key={program.id}
+                variants={itemVariants}
+                whileHover={{ y: -4 }}
+                className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between items-center text-center group"
+              >
+                <div className="flex flex-col items-center">
+                  <div className={`w-12 h-12 rounded-full ${program.colorClass} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                    {program.icon}
+                  </div>
+                  <h3 className="text-sm font-extrabold text-[#0f0726] mb-2 leading-snug">{program.title}</h3>
+                  <p className="text-xs text-gray-500 font-medium leading-relaxed mb-4">{program.description}</p>
+                </div>
+                <button
+                  onClick={() => scrollToSection('contact')}
+                  className="text-xs font-bold text-[#6d28d9] hover:text-[#5b21b6] inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform"
                 >
-                  {service.icon}
-                </motion.div>
-                <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-3 sm:mb-4">{service.title}</h2>
-                <p className="text-gray-600 leading-relaxed text-base">
-                  {service.description}
-                </p>
+                  Explore <ArrowRight size={12} />
+                </button>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+
+        {/* Section 2: Specialized Programs */}
+        <div className="mb-16">
+          <div className="flex items-center justify-center gap-4 mb-10">
+            <div className="h-[1px] bg-purple-100 flex-1 max-w-[150px] hidden sm:block"></div>
+            <span className="text-xs font-extrabold tracking-widest text-[#6d28d9] uppercase bg-purple-50 px-4 py-1.5 rounded-full border border-purple-100">
+              ✦ SPECIALIZED PROGRAMS
+            </span>
+            <div className="h-[1px] bg-purple-100 flex-1 max-w-[150px] hidden sm:block"></div>
+          </div>
+
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5"
+          >
+            {specializedPrograms.map((program) => (
+              <motion.div
+                key={program.id}
+                variants={itemVariants}
+                whileHover={{ y: -4 }}
+                className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between items-center text-center group"
+              >
+                <div className="flex flex-col items-center">
+                  <div className={`w-12 h-12 rounded-full ${program.colorClass} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                    {program.icon}
+                  </div>
+                  <h3 className="text-sm font-extrabold text-[#0f0726] mb-2 leading-snug">{program.title}</h3>
+                  <p className="text-xs text-gray-500 font-medium leading-relaxed mb-4">{program.description}</p>
+                </div>
+                <button
+                  onClick={() => scrollToSection('contact')}
+                  className="text-xs font-bold text-[#6d28d9] hover:text-[#5b21b6] inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform"
+                >
+                  Explore <ArrowRight size={12} />
+                </button>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+
+        {/* Bottom Highlights Bar */}
+        <div className="bg-[#f5f0ff]/80 border border-purple-100 rounded-2xl p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6">
+          {highlights.map((item, idx) => (
+            <div key={idx} className="flex items-center gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-white shadow-sm border border-purple-100 flex items-center justify-center shrink-0">
+                {item.icon}
               </div>
-            </motion.div>
+              <div className="flex flex-col">
+                <span className="text-xs font-extrabold text-[#0f0726]">{item.title}</span>
+                <span className="text-[11px] text-gray-500 font-medium leading-tight">{item.subtitle}</span>
+              </div>
+            </div>
           ))}
-        </motion.div>
+        </div>
 
-        {/* Three Column Section for Workshops, Freebies, and Step Into Training */}
-        <motion.div 
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8"
-        >
-          {/* Workshops Section */}
-          <motion.div variants={itemVariants}>
-            <div className="bg-gradient-to-br from-primary-50 to-white rounded-2xl shadow-lg p-6 sm:p-8 hover:shadow-2xl transition-all duration-300 h-full border border-primary-100">
-              <div className="flex items-center gap-2 sm:gap-4 mb-3 sm:mb-6">
-                <div className="p-1.5 sm:p-2 bg-primary-100 rounded-full">
-                  {workshops.icon}
-                </div>
-                <h2 className="text-xl sm:text-2xl font-bold text-primary-800">{workshops.title}</h2>
-              </div>
-              <p className="text-gray-600 leading-relaxed mb-4 sm:mb-6 text-base">
-                {workshops.description}
-              </p>
-              <p className="text-primary-600 font-semibold flex items-center gap-2 text-sm sm:text-base">
-                <span className="text-xl sm:text-2xl">✨</span> {workshops.note}
-              </p>
-            </div>
-          </motion.div>
-
-          {/* Freebies Section */}
-          <motion.div variants={itemVariants}>
-            <div className="bg-gradient-to-br from-primary-50 to-white rounded-2xl shadow-lg p-6 sm:p-8 hover:shadow-2xl transition-all duration-300 h-full border border-primary-100">
-              <div className="flex items-center gap-2 sm:gap-4 mb-3 sm:mb-6">
-                <div className="p-1.5 sm:p-2 bg-primary-100 rounded-full">
-                  {freebies.icon}
-                </div>
-                <h2 className="text-xl sm:text-2xl font-bold text-primary-800">{freebies.title}</h2>
-              </div>
-              <p className="text-gray-600 leading-relaxed text-base">
-                {freebies.description}
-              </p>
-            </div>
-          </motion.div>
-
-          {/* Step Into Training Section */}
-          <motion.div variants={itemVariants}>
-            <div className="bg-gradient-to-br from-primary-50 to-white rounded-2xl shadow-lg p-6 sm:p-8 hover:shadow-2xl transition-all duration-300 h-full border border-primary-100">
-              <div className="flex items-center gap-2 sm:gap-4 mb-3 sm:mb-6">
-                <div className="p-1.5 sm:p-2 bg-primary-100 rounded-full">
-                  {stepIntoTraining.icon}
-                </div>
-                <h2 className="text-xl sm:text-2xl font-bold text-primary-800">{stepIntoTraining.title}</h2>
-              </div>
-              <p className="text-gray-600 leading-relaxed mb-4 sm:mb-6 text-base">
-                {stepIntoTraining.description}
-              </p>
-              <ul className="space-y-2">
-                {stepIntoTraining.features.map((feature, index) => (
-                  <li key={index} className="flex items-center gap-2 text-sm sm:text-base text-gray-700">
-                    <span className="text-primary-600">•</span>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </motion.div>
-        </motion.div>
       </div>
     </div>
   );

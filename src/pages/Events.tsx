@@ -20,7 +20,6 @@ interface Event {
 const Events: React.FC = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [expandedEvent, setExpandedEvent] = useState<string | null>(null);
 
   useEffect(() => {
@@ -42,8 +41,8 @@ const Events: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-500"></div>
+      <div className="py-20 flex items-center justify-center bg-white">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
       </div>
     );
   }
@@ -74,24 +73,32 @@ const Events: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      <div className="container mx-auto px-4 py-12">
-        <motion.h1 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-4xl font-bold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-blue-600"
-        >
-          Upcoming Events
-        </motion.h1>
+    <div className="py-16 md:py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-primary-50 border border-primary-200 text-primary-600 text-xs font-bold tracking-wider rounded-full uppercase mb-4">
+            ★ Live Workshops & Sessions
+          </span>
+          <motion.h1 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#0f0726]"
+          >
+            Upcoming <span className="text-primary-600">Events</span>
+          </motion.h1>
+          <p className="text-gray-600 text-base max-w-2xl mx-auto mt-4 font-medium">
+            Join our expert-led sessions to level up your AI skills and build your personal brand.
+          </p>
+        </div>
         
         {events.length === 0 ? (
           <motion.p 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-center text-gray-600 text-lg"
+            className="text-center text-gray-500 font-medium text-base py-12"
           >
-            No upcoming events at the moment.
+            No upcoming events at the moment. Check back soon!
           </motion.p>
         ) : (
           <motion.div 
@@ -104,69 +111,72 @@ const Events: React.FC = () => {
               <motion.div
                 key={event.id}
                 variants={itemVariants}
-                whileHover={{ scale: 1.02 }}
-                className="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:shadow-xl"
+                whileHover={{ y: -5 }}
+                className="bg-[#faf9fe] rounded-2xl border border-gray-100 shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md flex flex-col justify-between"
               >
-                {event.imageUrl && (
-                  <div className="relative h-48 overflow-hidden">
-                    <img
-                      src={event.imageUrl}
-                      alt={event.title}
-                      className="w-full h-full object-cover transform transition-transform duration-500 hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                  </div>
-                )}
-                <div className="p-6">
-                  <h2 className="text-xl font-semibold text-gray-800 mb-3">{event.title}</h2>
-                  <div className="space-y-3 text-gray-600">
-                    <div className="flex items-center">
-                      <Calendar className="w-5 h-5 mr-2 text-primary-500" />
-                      <span>{new Date(event.date).toLocaleDateString('en-US', { 
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                      })}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Clock className="w-5 h-5 mr-2 text-primary-500" />
-                      <span>{event.time}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <MapPin className="w-5 h-5 mr-2 text-primary-500" />
-                      <span>{event.location}</span>
-                    </div>
-                  </div>
-                  <p className={`mt-4 text-gray-600 ${expandedEvent === event.id ? '' : 'line-clamp-3'}`}>
-                    {event.description}
-                  </p>
-                  <div className="mt-4 flex justify-between items-center">
-                    {event.registrationLink && (
-                      <motion.a
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        href={event.registrationLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center px-6 py-3 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors duration-300"
-                      >
-                        Register Now
-                        <ExternalLink className="w-4 h-4 ml-2" />
-                      </motion.a>
-                    )}
-                    <button
-                      onClick={() => toggleExpand(event.id)}
-                      className="flex items-center text-primary-500 hover:text-primary-600 transition-colors duration-300"
-                    >
-                      {expandedEvent === event.id ? 'Show Less' : 'Show More'}
-                      <ChevronDown 
-                        className={`w-5 h-5 ml-1 transition-transform duration-300 ${
-                          expandedEvent === event.id ? 'transform rotate-180' : ''
-                        }`}
+                <div>
+                  {event.imageUrl && (
+                    <div className="relative h-48 overflow-hidden">
+                      <img
+                        src={event.imageUrl}
+                        alt={event.title}
+                        className="w-full h-full object-cover transform transition-transform duration-500 hover:scale-105"
                       />
-                    </button>
+                    </div>
+                  )}
+                  <div className="p-6">
+                    <h2 className="text-xl font-extrabold text-[#0f0726] mb-3">{event.title}</h2>
+                    <div className="space-y-2 text-sm text-gray-600 font-medium">
+                      <div className="flex items-center">
+                        <Calendar className="w-4 h-4 mr-2 text-primary-600 shrink-0" />
+                        <span>{new Date(event.date).toLocaleDateString('en-US', { 
+                          weekday: 'long',
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        })}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <Clock className="w-4 h-4 mr-2 text-primary-600 shrink-0" />
+                        <span>{event.time}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <MapPin className="w-4 h-4 mr-2 text-primary-600 shrink-0" />
+                        <span>{event.location}</span>
+                      </div>
+                    </div>
+                    <p className={`mt-4 text-sm text-gray-600 leading-relaxed font-medium ${expandedEvent === event.id ? '' : 'line-clamp-3'}`}>
+                      {event.description}
+                    </p>
                   </div>
+                </div>
+
+                <div className="p-6 pt-0 flex justify-between items-center gap-2">
+                  {event.registrationLink ? (
+                    <motion.a
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      href={event.registrationLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 text-white text-xs font-bold rounded-lg hover:bg-primary-700 transition-colors shadow-sm"
+                    >
+                      Register Now
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </motion.a>
+                  ) : <div />}
+
+                  <button
+                    onClick={() => toggleExpand(event.id)}
+                    className="flex items-center text-xs font-bold text-primary-600 hover:text-primary-700 transition-colors"
+                  >
+                    {expandedEvent === event.id ? 'Less' : 'More'}
+                    <ChevronDown 
+                      className={`w-4 h-4 ml-0.5 transition-transform duration-300 ${
+                        expandedEvent === event.id ? 'transform rotate-180' : ''
+                      }`}
+                    />
+                  </button>
                 </div>
               </motion.div>
             ))}
@@ -177,4 +187,4 @@ const Events: React.FC = () => {
   );
 };
 
-export default Events; 
+export default Events;

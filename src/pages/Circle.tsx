@@ -1,8 +1,10 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { Building2, GraduationCap } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 function Circle() {
+  const navigate = useNavigate();
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -25,17 +27,22 @@ function Circle() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white py-16">
-      <div className="container mx-auto px-4">
+    <div className="bg-white py-16 md:py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">Our Circle</h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            Discover our network of partners and collaborators who help us empower students and women.
+          <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-primary-50 border border-primary-200 text-primary-600 text-xs font-bold tracking-wider rounded-full uppercase mb-4">
+            ★ Ecosystem & Partnerships
+          </span>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#0f0726]">
+            Our <span className="text-primary-600">Circle</span>
+          </h1>
+          <p className="text-gray-600 text-base max-w-2xl mx-auto mt-4 font-medium">
+            Discover our network of industry partners and educational institutions working with us to empower students and creators.
           </p>
         </motion.div>
 
@@ -44,64 +51,54 @@ function Circle() {
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="mb-20"
+          viewport={{ once: true }}
+          className="mb-12"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {/* Companies Card */}
             <motion.div
               variants={itemVariants}
-              whileHover={{ 
-                scale: 1.05,
-                transition: { duration: 0.2 }
-              }}
-              className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100"
+              whileHover={{ y: -5 }}
+              className="bg-[#faf9fe] rounded-2xl p-8 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between"
             >
-              <div className="flex items-center justify-center gap-3 mb-6">
-                <Building2 className="w-8 h-8 text-blue-600" />
-                <h2 className="text-2xl font-semibold text-gray-800">Our Partner Companies</h2>
+              <div>
+                <div className="w-12 h-12 rounded-xl bg-primary-50 flex items-center justify-center mb-6">
+                  <Building2 className="w-6 h-6 text-primary-600" />
+                </div>
+                <h2 className="text-2xl font-bold text-[#0f0726] mb-3">Partner Companies</h2>
+                <p className="text-gray-600 text-sm font-medium leading-relaxed mb-6">
+                  Collaborations with leading corporations and startups to provide career paths, internships, and resources.
+                </p>
               </div>
-              <p className="text-gray-600 mb-6 text-center">
-                We collaborate with leading companies to provide opportunities and resources for students and women empowerment.
-              </p>
-              <div className="text-center">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => window.location.href = '/companies'}
-                  className="px-6 py-3 bg-blue-600 text-white rounded-full font-medium shadow-lg hover:shadow-xl transition-all duration-300"
-                >
-                  View Companies
-                </motion.button>
-              </div>
+              <button
+                onClick={() => navigate('/companies')}
+                className="w-full py-3 bg-primary-600 text-white text-sm font-semibold rounded-lg hover:bg-primary-700 transition-colors shadow-md text-center"
+              >
+                Explore Partner Companies
+              </button>
             </motion.div>
 
             {/* Colleges Card */}
             <motion.div
               variants={itemVariants}
-              whileHover={{ 
-                scale: 1.05,
-                transition: { duration: 0.2 }
-              }}
-              className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100"
+              whileHover={{ y: -5 }}
+              className="bg-[#faf9fe] rounded-2xl p-8 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between"
             >
-              <div className="flex items-center justify-center gap-3 mb-6">
-                <GraduationCap className="w-8 h-8 text-blue-600" />
-                <h2 className="text-2xl font-semibold text-gray-800">Educational Partners</h2>
+              <div>
+                <div className="w-12 h-12 rounded-xl bg-accent-50 flex items-center justify-center mb-6">
+                  <GraduationCap className="w-6 h-6 text-accent-600" />
+                </div>
+                <h2 className="text-2xl font-bold text-[#0f0726] mb-3">Educational Partners</h2>
+                <p className="text-gray-600 text-sm font-medium leading-relaxed mb-6">
+                  Collaborations with colleges and academic institutions to train faculty, conduct workshops, and mentor students.
+                </p>
               </div>
-              <p className="text-gray-600 mb-6 text-center">
-                We work closely with prestigious educational institutions to empower students and create opportunities for growth.
-              </p>
-              <div className="text-center">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => window.location.href = '/colleges'}
-                  className="px-6 py-3 bg-green-600 text-white rounded-full font-medium shadow-lg hover:shadow-xl transition-all duration-300"
-                >
-                  View Colleges
-                </motion.button>
-              </div>
+              <button
+                onClick={() => navigate('/colleges')}
+                className="w-full py-3 bg-accent-600 text-white text-sm font-semibold rounded-lg hover:bg-accent-700 transition-colors shadow-md text-center"
+              >
+                Explore Academic Partners
+              </button>
             </motion.div>
           </div>
         </motion.div>

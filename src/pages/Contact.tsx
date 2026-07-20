@@ -27,12 +27,11 @@ export default function Contact() {
     subject: '',
     message: ''
   });
-  // Review form state
+
   const [showReview, setShowReview] = useState(false);
   const [reviewForm, setReviewForm] = useState({ name: '', role: '', rating: 0, review: '' });
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
   const [reviewSuccess, setReviewSuccess] = useState(false);
-  // Add new state for form submission
   const [submitting, setSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [error, setError] = useState('');
@@ -44,18 +43,15 @@ export default function Contact() {
     setError('');
 
     try {
-      // Check if user is authenticated
       const user = auth.currentUser;
       
-      // Add the form data to Firestore
       await addDoc(collection(db, 'contactMessages'), {
         ...formData,
         status: 'new',
         createdAt: new Date(),
-        userId: user?.uid || 'anonymous' // Add user ID if available
+        userId: user?.uid || 'anonymous'
       });
       
-      // Reset form and show success message
       setFormData({
         name: '',
         email: '',
@@ -64,7 +60,6 @@ export default function Contact() {
       });
       setSubmitSuccess(true);
       
-      // Hide success message after 3 seconds
       setTimeout(() => {
         setSubmitSuccess(false);
       }, 3000);
@@ -83,7 +78,6 @@ export default function Contact() {
     });
   };
 
-  // Review form handlers
   const handleReviewChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
@@ -111,98 +105,106 @@ export default function Contact() {
 
   useEffect(() => {
     const fetchCommunityLinks = async () => {
-      const linksQuery = query(collection(db, 'communityLinks'), orderBy('createdAt', 'desc'));
-      const linksSnapshot = await getDocs(linksQuery);
-      const linksData: CommunityLink[] = linksSnapshot.docs.map(doc => ({
-        id: doc.id,
-        platform: doc.data().platform,
-        url: doc.data().url
-      }));
-      setCommunityLinks(linksData);
+      try {
+        const linksQuery = query(collection(db, 'communityLinks'), orderBy('createdAt', 'desc'));
+        const linksSnapshot = await getDocs(linksQuery);
+        const linksData: CommunityLink[] = linksSnapshot.docs.map(doc => ({
+          id: doc.id,
+          platform: doc.data().platform,
+          url: doc.data().url
+        }));
+        setCommunityLinks(linksData);
+      } catch (err) {
+        console.error('Error fetching community links:', err);
+      }
     };
 
     fetchCommunityLinks();
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-50 py-6 sm:py-10 md:py-20">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="bg-[#faf9fe] py-16 md:py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           className="max-w-4xl mx-auto w-full"
         >
-          <div className="text-center mb-8 sm:mb-12">
+          <div className="text-center mb-12">
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-primary-50 border border-primary-200 text-primary-600 text-xs font-bold tracking-wider rounded-full uppercase mb-4">
+              ★ Let's Connect
+            </span>
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.8 }}
-              className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary-800 mb-3 sm:mb-4"
+              className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#0f0726] mb-4"
             >
-              Get in Touch
+              Get in <span className="text-primary-600">Touch</span>
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.8 }}
-              className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-4"
+              className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto font-medium"
             >
-              Have questions about our programs or want to learn more? We'd love to hear from you.
+              Have questions about our programs, workshops, or want to collaborate? We'd love to hear from you.
             </motion.p>
           </div>
 
-          {/* Review Button */}
-          <div className="text-center mb-6 sm:mb-8">
+          {/* Review Toggle Button */}
+          <div className="text-center mb-8">
             <button
-              className="bg-primary-600 text-white px-4 sm:px-6 py-2 rounded-full font-medium hover:bg-primary-700 transition-colors duration-300 text-sm sm:text-base"
+              className="bg-primary-50 border border-primary-200 text-primary-600 px-6 py-2.5 rounded-full font-bold hover:bg-primary-100 transition-colors duration-300 text-sm shadow-sm"
               onClick={() => setShowReview((v) => !v)}
             >
-              {showReview ? 'Close Review Form' : 'Leave a Review'}
+              {showReview ? 'Close Review Form' : '★ Leave a Review'}
             </button>
           </div>
+
           {/* Review Form */}
           {showReview && (
-            <form onSubmit={handleReviewSubmit} className="bg-white rounded-xl shadow-lg p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6 mb-8 sm:mb-12 max-w-lg mx-auto w-full">
-              <h3 className="text-xl sm:text-2xl font-bold text-primary-800 mb-4 text-center">Leave a Review</h3>
+            <form onSubmit={handleReviewSubmit} className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 md:p-8 space-y-5 mb-12 max-w-lg mx-auto w-full">
+              <h3 className="text-xl font-extrabold text-[#0f0726] text-center">Share Your Feedback</h3>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Name</label>
                 <input
                   type="text"
                   name="name"
                   value={reviewForm.name}
                   onChange={handleReviewChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm md:text-base"
+                  className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-600 focus:border-primary-600 text-sm font-medium"
                   required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Role</label>
                 <select
                   name="role"
                   value={reviewForm.role}
                   onChange={handleReviewChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm md:text-base"
+                  className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-600 focus:border-primary-600 text-sm font-medium"
                   required
                 >
-                  <option value="">Select a role</option>
+                  <option value="">Select your role</option>
+                  <option value="Educator / Teacher">Educator / Teacher</option>
                   <option value="Entrepreneur">Entrepreneur</option>
                   <option value="Student">Student</option>
-                  <option value="Digital Marketer">Digital Marketer</option>
-                  <option value="Tech Entrepreneur">Tech Entrepreneur</option>
+                  <option value="Corporate Professional">Corporate Professional</option>
                   <option value="Other">Other</option>
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Rating</label>
-                <div className="flex space-x-1 justify-center sm:justify-start">
+                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Rating</label>
+                <div className="flex space-x-2 justify-center sm:justify-start">
                   {[1,2,3,4,5].map((star) => (
                     <button
                       type="button"
                       key={star}
                       onClick={() => handleReviewRating(star)}
-                      className={`text-2xl sm:text-3xl transition-colors duration-200 ${
-                        star <= reviewForm.rating ? 'text-yellow-400' : 'text-gray-300'
+                      className={`text-2xl transition-colors duration-200 ${
+                        star <= reviewForm.rating ? 'text-amber-400' : 'text-gray-200'
                       }`}
                     >
                       ★
@@ -211,13 +213,13 @@ export default function Contact() {
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Review</label>
+                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Review</label>
                 <textarea
                   name="review"
                   value={reviewForm.review}
                   onChange={handleReviewChange}
                   rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm md:text-base"
+                  className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-600 focus:border-primary-600 text-sm font-medium"
                   required
                 />
               </div>
@@ -225,7 +227,7 @@ export default function Contact() {
                 <button
                   type="submit"
                   disabled={reviewSubmitting}
-                  className="w-full sm:w-auto px-6 py-2 bg-primary-600 text-white rounded-full font-medium hover:bg-primary-700 transition-colors duration-300 disabled:opacity-50"
+                  className="w-full bg-primary-600 text-white py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors duration-300 disabled:opacity-50 text-sm shadow-md"
                 >
                   {reviewSubmitting ? 'Submitting...' : 'Submit Review'}
                 </button>
@@ -233,93 +235,98 @@ export default function Contact() {
             </form>
           )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
             {/* Contact Information */}
             <motion.div
-              initial={{ opacity: 0, x: -50 }}
+              initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.6, duration: 0.8 }}
-              className="space-y-8"
+              transition={{ delay: 0.5, duration: 0.8 }}
+              className="space-y-6"
             >
-              <div className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <h3 className="text-xl font-semibold text-primary-700 mb-4">Contact Information</h3>
-                <div className="space-y-4">
+              <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-100">
+                <h3 className="text-xl font-extrabold text-[#0f0726] mb-6">Contact Details</h3>
+                <div className="space-y-5">
                   <div className="flex items-center space-x-4">
-                    <div className="bg-primary-100 p-3 rounded-full">
-                      <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="bg-primary-50 p-3.5 rounded-xl text-primary-600 shrink-0">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                       </svg>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500">Email</p>
-                      <p className="text-gray-700 font-medium">poornima.sandeep@tech-shiksha.com 
-</p>
+                      <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Email</p>
+                      <a href="mailto:connect@aiinfluencerhub.in" className="text-gray-900 font-semibold hover:text-primary-600 transition-colors text-sm">connect@aiinfluencerhub.in</a>
                     </div>
                   </div>
+
                   <div className="flex items-center space-x-4">
-                    <div className="bg-primary-100 p-3 rounded-full">
-                      <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="bg-primary-50 p-3.5 rounded-xl text-primary-600 shrink-0">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                       </svg>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500">Phone</p>
-                      <p className="text-gray-700 font-medium">+91 92063 26416</p>
+                      <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Phone / WhatsApp</p>
+                      <a href="https://wa.me/919206326416" target="_blank" rel="noopener noreferrer" className="text-gray-900 font-semibold hover:text-primary-600 transition-colors text-sm">+91 92063 26416</a>
                     </div>
                   </div>
+
                   <div className="flex items-center space-x-4">
-                    <div className="bg-primary-100 p-3 rounded-full">
-                      <svg className="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="bg-primary-50 p-3.5 rounded-xl text-primary-600 shrink-0">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500">Location</p>
-                      <p className="text-gray-700 font-medium">Bangalore, Karnataka, India</p>
+                      <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Location</p>
+                      <p className="text-gray-900 font-semibold text-sm">Bangalore, Karnataka, India</p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <h3 className="text-xl font-semibold text-primary-700 mb-4">Follow Us</h3>
-                <div className="flex flex-wrap gap-4">
-                  {communityLinks.map((link) => {
-                    const platform = PLATFORM_OPTIONS.find(p => p.value === link.platform);
-                    if (!platform) return null;
+              {communityLinks.length > 0 && (
+                <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-100">
+                  <h3 className="text-lg font-bold text-[#0f0726] mb-4">Connect on Social</h3>
+                  <div className="flex flex-wrap gap-3">
+                    {communityLinks.map((link) => {
+                      const platform = PLATFORM_OPTIONS.find(p => p.value === link.platform);
+                      if (!platform) return null;
 
-                    return (
-                      <motion.a
-                        key={link.id}
-                        href={link.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                        className={`${platform.bgColor} p-3 rounded-full hover:opacity-90 transition-all duration-300`}
-                      >
-                        {React.createElement(platform.icon, { 
-                          size: 24,
-                          className: platform.color
-                        })}
-                      </motion.a>
-                    );
-                  })}
+                      return (
+                        <motion.a
+                          key={link.id}
+                          href={link.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className={`${platform.bgColor} p-3 rounded-xl hover:shadow-sm transition-all duration-300 flex items-center gap-2 text-xs font-bold`}
+                        >
+                          {React.createElement(platform.icon, { 
+                            size: 20,
+                            className: platform.color
+                          })}
+                          <span>{platform.label}</span>
+                        </motion.a>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
+              )}
             </motion.div>
 
             {/* Contact Form */}
             <motion.div
-              initial={{ opacity: 0, x: 50 }}
+              initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.6, duration: 0.8 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
             >
-              <form onSubmit={handleSubmit} className="bg-white rounded-xl p-4 sm:p-6 md:p-8 shadow-lg w-full">
-                <div className="space-y-4 sm:space-y-6">
+              <form onSubmit={handleSubmit} className="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-gray-100 w-full">
+                <h3 className="text-xl font-extrabold text-[#0f0726] mb-6">Send a Message</h3>
+                <div className="space-y-4">
                   <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="name" className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
                       Name
                     </label>
                     <input
@@ -328,13 +335,13 @@ export default function Contact() {
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm md:text-base"
+                      className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-600 focus:border-primary-600 text-sm font-medium"
                       required
                       disabled={submitting}
                     />
                   </div>
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="email" className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
                       Email
                     </label>
                     <input
@@ -343,13 +350,13 @@ export default function Contact() {
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm md:text-base"
+                      className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-600 focus:border-primary-600 text-sm font-medium"
                       required
                       disabled={submitting}
                     />
                   </div>
                   <div>
-                    <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="subject" className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
                       Subject
                     </label>
                     <input
@@ -358,13 +365,13 @@ export default function Contact() {
                       name="subject"
                       value={formData.subject}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm md:text-base"
+                      className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-600 focus:border-primary-600 text-sm font-medium"
                       required
                       disabled={submitting}
                     />
                   </div>
                   <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="message" className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
                       Message
                     </label>
                     <textarea
@@ -373,16 +380,16 @@ export default function Contact() {
                       value={formData.message}
                       onChange={handleChange}
                       rows={4}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm md:text-base"
+                      className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-600 focus:border-primary-600 text-sm font-medium"
                       required
                       disabled={submitting}
                     />
                   </div>
                   <motion.button
                     type="submit"
-                    whileHover={{ scale: submitting ? 1 : 1.02 }}
+                    whileHover={{ scale: submitting ? 1 : 1.01 }}
                     whileTap={{ scale: submitting ? 1 : 0.98 }}
-                    className={`w-full bg-primary-600 text-white py-2 md:py-3 px-4 md:px-6 rounded-lg font-medium transition-colors duration-300 text-sm md:text-base ${
+                    className={`w-full bg-primary-600 text-white py-3 px-6 rounded-lg font-semibold transition-colors duration-300 text-sm shadow-md ${
                       submitting ? 'opacity-75 cursor-not-allowed' : 'hover:bg-primary-700'
                     }`}
                     disabled={submitting}
@@ -390,12 +397,12 @@ export default function Contact() {
                     {submitting ? 'Sending...' : 'Send Message'}
                   </motion.button>
                   {submitSuccess && (
-                    <div className="text-green-600 text-center font-medium mt-2">
+                    <div className="text-emerald-600 text-center font-bold text-sm mt-2">
                       Thank you for your message! We'll get back to you soon.
                     </div>
                   )}
                   {error && (
-                    <div className="text-red-600 text-center font-medium mt-2">{error}</div>
+                    <div className="text-rose-600 text-center font-bold text-sm mt-2">{error}</div>
                   )}
                 </div>
               </form>
@@ -405,4 +412,4 @@ export default function Contact() {
       </div>
     </div>
   );
-} 
+}
